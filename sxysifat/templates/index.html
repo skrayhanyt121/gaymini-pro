@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gaymini pro</title>
+  <link rel="stylesheet" href="/sxysifat/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="icon" type="image/jpeg" href="/sxysifat/banner.jpg" />
+</head>
+<body>
+  <div class="card">
+
+    <!-- Banner Image -->
+    <div class="banner">
+      <img src="/sxysifat/banner.jpg" alt="Gaymini pro" />
+      <div class="version-badge">
+        <i class="fa-solid fa-server"></i> v1.0.0
+      </div>
+      <div class="status-badge" id="statusBadge">
+        <span class="dot"></span> ONLINE
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="body">
+      <h1 class="title">Gaymini pro</h1>
+      <div class="underline"></div>
+
+      <p class="desc">
+        Built &amp; maintained by <strong>SIFAT</strong>
+      </p>
+
+      <!-- Main Buttons -->
+      <div class="btn-row">
+        <a href="/docs" class="btn btn-primary">
+          <i class="fa-solid fa-book-open"></i> DOCS
+        </a>
+        <a href="/stats" class="btn btn-outline">
+          <i class="fa-solid fa-chart-pie"></i> STATS
+        </a>
+      </div>
+
+      <!-- Social Buttons -->
+      <div class="btn-row social-row">
+        <a href="https://www.facebook.com/sifaturtese" class="btn-icon facebook" target="_blank" title="Facebook">
+          <i class="fa-brands fa-facebook-f"></i>
+        </a>
+        <a href="https://github.com/FX-SIF4T" class="btn-icon github" target="_blank" title="GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        <a href="#" class="btn-icon share" title="Share" onclick="shareLink(event)">
+          <i class="fa-solid fa-share-nodes"></i>
+        </a>
+      </div>
+
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Footer -->
+    <div class="footer">
+      POWERED BY <a href="https://github.com/FX-SIF4T" target="_blank">@SIFAT</a> &bull; 2026
+    </div>
+
+  </div>
+
+  <script>
+    async function shareLink(e) {
+      e.preventDefault();
+      if (navigator.share) {
+        await navigator.share({ title: 'Gaymini pro', url: window.location.href });
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert('Link copied!');
+      }
+    }
+
+    async function checkStatus() {
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        const badge = document.getElementById('statusBadge');
+        if (data.status === 'online') {
+          badge.innerHTML = '<span class="dot"></span> ONLINE';
+        } else {
+          badge.style.color = '#f87171';
+          badge.innerHTML = '<span class="dot" style="background:#f87171"></span> OFFLINE';
+        }
+      } catch {}
+    }
+    checkStatus();
+  </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gaymini-cdi"
+version = "1.0.0"
+authors = [
+    {name = "SIFAT"},
+]
+description = "An async Python wrapper for Google Gemini web app"
+requires-python = ">=3.10"
+dependencies = [
+    "curl-cffi~=0.15.0",
+    "loguru~=0.7.3",
+    "orjson~=3.11.7",
+    "pydantic~=2.12.5",
+]
+
+[project.urls]
+Repository = "https://github.com/MYB-SIFAT/Gemini-API"
+
+[tool.setuptools.packages.find]
+where = ["sxysifat/src"]
+include = ["gemini_webapi"]

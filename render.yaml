@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: gaymini-pro
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt && pip install -e .
+    startCommand: python run_server.py
+    healthCheckPath: /api/gemini/accounts
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+      - key: PORT
+        value: "10000"

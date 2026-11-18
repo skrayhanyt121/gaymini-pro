@@ -1,0 +1,9 @@
+# NEVER commit live Google session cookies
+gaymini.txt
+cookies.json
+imported_cookies.json
+*.log
+__pycache__/
+
+uploads/*
+!uploads/.gitkeep

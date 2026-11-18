@@ -1,0 +1,8 @@
+[phases.install]
+cmds = [
+  "pip install -r requirements.txt",
+  "pip install -e ."
+]
+
+[start]
+cmd = "python run_server.py"

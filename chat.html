@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Gaymini — Argon 4 / Hydrogen</title>
+<style>
+  :root {
+    --bg: #07070d;
+    --glass: rgba(255,255,255,.055);
+    --glass-strong: rgba(255,255,255,.09);
+    --stroke: rgba(255,255,255,.1);
+    --text: #f4f4f8;
+    --muted: #9a9aad;
+    --violet: #6366f1;
+    --fuchsia: #8b5cf6;
+    --cyan: #22d3ee;
+    --green: #34d399;
+    --red: #f87171;
+    --grad: linear-gradient(135deg, #6366f1, #8b5cf6);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Bengali", "Hind Siliguri", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Aurora background ---------- */
+  .aurora { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: .28; animation: drift 22s ease-in-out infinite alternate; }
+  .orb.a { width: 480px; height: 480px; background: #4338ca; top: -160px; left: -120px; }
+  .orb.b { width: 420px; height: 420px; background: #1e3a5f; bottom: -140px; right: -100px; animation-delay: -8s; }
+  .orb.c { width: 300px; height: 300px; background: #4c1d95; top: 38%; left: 55%; opacity: .18; animation-delay: -14s; }
+  @keyframes drift {
+    from { transform: translate(0,0) scale(1); }
+    to { transform: translate(60px, 40px) scale(1.15); }
+  }
+  .grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: .05;
+    background-image: radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+
+  /* ---------- App shell ---------- */
+  .app { position: relative; z-index: 2; height: 100dvh; display: flex; flex-direction: column; max-width: 780px; margin: 0 auto; }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 18px 10px;
+  }
+  .logo {
+    width: 38px; height: 38px; border-radius: 11px;
+    background: var(--grad); display: flex; align-items: center; justify-content: center;
+    font-size: 19px; box-shadow: 0 4px 14px rgba(99,102,241,.4);
+  }
+  .brand { font-size: 17px; font-weight: 800; letter-spacing: -.3px; }
+  .brand span {
+    background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .pill {
+    margin-left: auto; display: flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 700; color: var(--green);
+    background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.28);
+    padding: 6px 11px; border-radius: 999px;
+  }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+  .pill.off { color: var(--red); background: rgba(248,113,113,.1); border-color: rgba(248,113,113,.3); }
+  .pill.off .dot { background: var(--red); box-shadow: 0 0 10px var(--red); animation: none; }
+  .icon-btn {
+    width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--stroke);
+    background: #12121c; color: var(--text); font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .icon-btn:hover { background: #1a1a28; }
+  .new-chat-btn {
+    border: 1px solid #2e2e3d; background: #12121c; color: var(--text);
+    font-family: inherit; font-size: 12.5px; font-weight: 700;
+    padding: 8px 13px; border-radius: 999px; cursor: pointer; white-space: nowrap;
+  }
+  .new-chat-btn:hover { border-color: #6366f1; color: #c7d2fe; }
+
+  /* ---------- Settings panel ---------- */
+  .settings {
+    margin: 0 18px; overflow: hidden; max-height: 0; transition: max-height .3s ease;
+  }
+  .settings.open { max-height: 260px; }
+  .settings-card {
+    background: #12121c; border: 1px solid #23232f; border-radius: 18px;
+    padding: 14px 16px;
+  }
+  .settings-card label { font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--muted); display: block; margin: 8px 0 5px; }
+  .settings-card input {
+    width: 100%; padding: 11px 13px; border-radius: 12px;
+    border: 1px solid var(--stroke); background: rgba(0,0,0,.35);
+    color: var(--text); font-size: 13px; font-family: inherit; outline: none;
+  }
+  .settings-card input:focus { border-color: var(--violet); box-shadow: 0 0 0 3px rgba(124,92,255,.25); }
+  .settings-card p { font-size: 12px; color: var(--muted); line-height: 1.6; margin-top: 10px; }
+
+  /* ---------- Chat scroll ---------- */
+  #chat { flex: 1; overflow-y: auto; padding: 10px 18px 16px; display: flex; flex-direction: column; gap: 18px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.15) transparent; }
+
+  /* ---------- Hero ---------- */
+  .hero { margin: auto 0; text-align: center; padding: 20px 8px; animation: rise .5s ease; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .hero .spark { font-size: 40px; display: inline-block; }
+  .hero h2 {
+    font-size: clamp(28px, 7vw, 40px); font-weight: 800; letter-spacing: -1px; line-height: 1.15; margin-top: 10px; color: #fff;
+  }
+  .hero h2 .grad-text {
+    background: linear-gradient(90deg, #818cf8, #a78bfa);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p { color: var(--muted); font-size: 14.5px; margin-top: 10px; line-height: 1.7; }
+
+  /* ---------- Suggestion cards ---------- */
+  .suggest { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 22px; text-align: left; }
+  .s-card {
+    background: #12121c; border: 1px solid #23232f; border-radius: 18px;
+    padding: 14px; cursor: pointer; font-family: inherit; color: var(--text);
+    transition: transform .15s, border-color .15s, background .15s;
+  }
+  .s-card:hover { transform: translateY(-2px); border-color: rgba(99,102,241,.6); background: #161624; }
+  .s-card:active { transform: scale(.97); }
+  .s-card .ic { font-size: 20px; }
+  .s-card .t { font-size: 13.5px; font-weight: 700; margin-top: 8px; }
+  .s-card .d { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+
+  /* ---------- Messages ---------- */
+  .msg-row { display: flex; gap: 10px; align-items: flex-start; animation: rise .3s ease; }
+  .avatar {
+    width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .avatar.ai { background: var(--grad); box-shadow: 0 2px 10px rgba(99,102,241,.45); }
+  .avatar.user { background: rgba(255,255,255,.12); border: 1px solid var(--stroke); }
+  .bubble {
+    max-width: 85%; padding: 12px 15px; border-radius: 20px;
+    font-size: 14.5px; line-height: 1.7; white-space: pre-wrap; word-wrap: break-word;
+  }
+  .msg-row.user { flex-direction: row-reverse; }
+  .msg-row.user .bubble { background: #4f46e5; color: #fff; border-bottom-right-radius: 6px; box-shadow: 0 4px 14px rgba(79,70,229,.3); }
+  .msg-row.ai .bubble { background: #14141d; border: 1px solid #262633; border-bottom-left-radius: 6px; }
+  .msg-row.err .bubble { background: rgba(248,113,113,.12); border: 1px solid rgba(248,113,113,.4); color: #fca5a5; }
+  .meta { font-size: 11px; color: var(--muted); margin-top: 5px; padding: 0 2px; }
+  .typing span { display: inline-block; width: 7px; height: 7px; margin-right: 4px; border-radius: 50%; background: #818cf8; animation: blink 1.2s infinite; }
+  .typing span:nth-child(2) { animation-delay: .2s; }
+  .typing span:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+
+  /* ---------- Bottom area ---------- */
+  .bottom { padding: 6px 16px calc(14px + env(safe-area-inset-bottom)); }
+  .model-switch {
+    display: flex; gap: 4px; margin: 0 auto 10px; width: fit-content;
+    background: #12121c; border: 1px solid #23232f; border-radius: 999px; padding: 4px;
+  }
+  .model-switch button {
+    border: none; background: transparent; color: var(--muted); font-family: inherit;
+    font-size: 13px; font-weight: 700; padding: 8px 16px; border-radius: 999px; cursor: pointer;
+    transition: all .2s; display: flex; align-items: center; gap: 6px;
+  }
+  .model-switch button.active {
+    background: #4f46e5; color: #fff;
+    box-shadow: 0 3px 12px rgba(79,70,229,.45);
+  }
+  .mode-row {
+    display: flex; gap: 4px; margin: 0 auto 10px; width: fit-content;
+    background: #12121c; border: 1px solid #23232f; border-radius: 999px; padding: 4px;
+  }
+  .mode-btn {
+    border: none; background: transparent; color: var(--muted); font-family: inherit;
+    font-size: 12.5px; font-weight: 700; padding: 7px 13px; border-radius: 999px; cursor: pointer;
+  }
+  .mode-btn.active { background: #4f46e5; color: #fff; box-shadow: 0 3px 12px rgba(79,70,229,.45); }
+  .engine-row { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; font-size: 12.5px; color: var(--muted); }
+  .engine-btn {
+    border: 1px solid #2e2e3d; background: #12121c; color: var(--muted); font-family: inherit;
+    font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+  }
+  .engine-btn.active { background: #4f46e5; border-color: #4f46e5; color: #fff; }
+  .bubble pre { background: rgba(0,0,0,.45); border: 1px solid #262633; border-radius: 12px; padding: 10px 12px; overflow-x: auto; margin: 8px 0; font-size: 13px; line-height: 1.55; }
+  .bubble code { background: rgba(255,255,255,.09); padding: 1px 6px; border-radius: 6px; font-size: 13px; }
+  .bubble pre code { background: transparent; padding: 0; }
+  .copy-btn {
+    border: 1px solid var(--stroke); background: transparent; color: var(--muted);
+    font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; cursor: pointer; font-family: inherit;
+  }
+  .copy-btn:hover { color: #fff; border-color: #6366f1; }
+  .composer {
+    display: flex; gap: 10px; align-items: flex-end;
+    background: #191924; border: 1px solid #2e2e3d; border-radius: 22px;
+    padding: 7px 7px 7px 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .composer:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,.22), 0 10px 30px rgba(0,0,0,.5);
+  }
+  .composer textarea {
+    flex: 1; border: none; outline: none; resize: none; background: transparent;
+    color: #ffffff; font-size: 15px; font-family: inherit; line-height: 1.5;
+    padding: 9px 0; max-height: 140px;
+  }
+  .composer textarea::placeholder { color: #71717e; }
+  .attach-btn {
+    width: 40px; height: 40px; flex-shrink: 0; border: none; border-radius: 50%;
+    background: transparent; color: #a1a1aa; font-size: 19px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: background .15s, color .15s;
+  }
+  .attach-btn:hover { background: #262633; color: #fff; }
+  .img-preview {
+    display: flex; align-items: center; gap: 10px;
+    background: #191924; border: 1px solid #2e2e3d; border-radius: 16px;
+    padding: 8px 12px 8px 8px; margin-bottom: 8px;
+  }
+  .img-preview img { width: 48px; height: 48px; object-fit: cover; border-radius: 10px; }
+  .img-preview span { flex: 1; font-size: 13px; color: #d4d4d8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .img-preview button {
+    width: 28px; height: 28px; border: none; border-radius: 50%;
+    background: #262633; color: #fff; font-size: 13px; cursor: pointer;
+  }
+  .bubble img.edited-img { width: 100%; border-radius: 12px; display: block; margin-bottom: 8px; }
+  .bubble a.dl-link { color: #a5b4fc; font-size: 13px; font-weight: 700; text-decoration: none; }
+  .bubble a.dl-link:hover { text-decoration: underline; }
+  button.send {
+    width: 44px; height: 44px; flex-shrink: 0; border: none; border-radius: 50%;
+    background: #4f46e5; color: #fff; font-size: 17px; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(79,70,229,.45); transition: transform .15s, opacity .15s, background .15s;
+  }
+  button.send:hover { transform: scale(1.06); background: #4338ca; }
+  button.send:disabled { opacity: .4; cursor: wait; transform: none; }
+  #status { text-align: center; font-size: 11.5px; color: var(--muted); margin-top: 9px; }
+  .warn { text-align: center; font-size: 11px; color: #5b5b70; margin-top: 3px; }
+
+  /* Auth Modal & Video Player styles */
+  .auth-modal {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,.75); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center; padding: 16px;
+  }
+  .auth-card {
+    background: #11111a; border: 1px solid var(--stroke); border-radius: 18px;
+    width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; padding: 20px; box-shadow: 0 16px 40px rgba(0,0,0,.6);
+  }
+  .video-card { width: 100%; max-width: 540px; }
+  .video-card video { width: 100%; border-radius: 12px; border: 1px solid var(--stroke); background: #000; }
+  .mode-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+  .acc-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--stroke);
+    border-radius: 10px; margin-bottom: 6px; font-size: 12px; transition: border-color .15s, background .15s;
+  }
+  .acc-item.active { border-color: #6366f1; background: rgba(99,102,241,0.09); }
+  .badge-active { background: #059669; color: #fff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 6px; letter-spacing: 0.5px; }
+  .btn-sm { padding: 4px 10px; font-size: 11px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; }
+  .btn-switch { background: #4f46e5; color: #fff; }
+  .btn-switch:hover { background: #4338ca; }
+  .btn-del { background: transparent; color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+  .btn-del:hover { background: rgba(239,68,68,0.1); }
+</style>
+</head>
+<body>
+
+<div class="aurora"><div class="orb a"></div><div class="orb b"></div><div class="orb c"></div></div>
+<div class="grain"></div>
+
+<div class="app">
+  <div class="topbar">
+    <div class="logo">✦</div>
+    <div class="brand">Gay<span>mini</span></div>
+    <div class="pill" id="status-pill"><span class="dot"></span><span id="status-text">চেক হচ্ছে…</span></div>
+    <button class="new-chat-btn" onclick="newChat()" title="নতুন চ্যাট">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:3px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>নতুন চ্যাট
+    </button>
+    <button class="icon-btn" id="auth-sync-btn" onclick="openAuthModal()" title="Google & Flow লগইন / সিঙ্ক" style="position:relative;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-1.5 1.5L14 9l-1.5-1.5L11 9l-1 1-1.5-1.5L7 10l-1.5-1.5-3 3a5.5 5.5 0 1 0 7.78 7.78l10.72-10.72z"></path></svg>
+      <span id="auth-dot" style="position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 6px #34d399;"></span>
+    </button>
+    <button class="icon-btn" onclick="toggleSettings()" title="সেটিংস">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    </button>
+  </div>
+
+  <div class="auth-modal" id="auth-modal" style="display:none;" onclick="if(event.target===this)closeAuthModal()">
+    <div class="auth-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3 style="font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2"><path d="M21 2l-2 2m-1.5 1.5L14 9l-1.5-1.5L11 9l-1 1-1.5-1.5L7 10l-1.5-1.5-3 3a5.5 5.5 0 1 0 7.78 7.78l10.72-10.72z"></path></svg>
+          একাউন্ট ভল্ট ও কুকি ম্যানেজার
+        </h3>
+        <button onclick="closeAuthModal()" style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:2px 8px;">✕</button>
+      </div>
+
+      <!-- Phone Access URL Banner -->
+      <div style="padding:10px 12px;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.35);border-radius:10px;margin-bottom:12px;font-size:12px;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <span style="font-weight:700;color:#c7d2fe;">ফোন থেকে ব্রাউজারে খুলুন:</span><br>
+          <span id="phone-url" style="color:#a5b4fc;font-family:monospace;font-weight:700;">http://192.168.0.112:5000</span>
+        </div>
+        <button onclick="copyPhoneUrl()" style="background:rgba(255,255,255,0.08);border:1px solid var(--stroke);color:#c7d2fe;padding:5px 9px;border-radius:6px;cursor:pointer;font-size:11px;display:flex;align-items:center;gap:4px;" title="লিংক কপি">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> কপি
+        </button>
+      </div>
+
+      <!-- TWO SEPARATE SERVICE TABS -->
+      <div style="display:flex;gap:6px;margin-bottom:12px;background:rgba(255,255,255,0.04);padding:4px;border-radius:10px;border:1px solid var(--stroke);">
+        <button id="tab-gemini-btn" class="engine-btn active" style="flex:1;text-align:center;padding:7px;border-radius:8px;" onclick="switchAuthTab('gemini')">Gemini Accounts</button>
+        <button id="tab-flow-btn" class="engine-btn" style="flex:1;text-align:center;padding:7px;border-radius:8px;" onclick="switchAuthTab('flow')">Google Flow Accounts</button>
+      </div>
+
+      <!-- GEMINI TAB CONTENT -->
+      <div id="gemini-auth-tab">
+        <div id="gemini-auth-status-box" style="padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid var(--stroke);margin-bottom:12px;font-size:12.5px;line-height:1.6;">
+          Gemini স্ট্যাটাস লোড হচ্ছে…
+        </div>
+
+        <div style="margin-bottom:12px;padding:10px;background:rgba(255,255,255,0.02);border:1px solid var(--stroke);border-radius:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <label style="font-size:12px;font-weight:700;color:#c7d2fe;">Gemini Multiple Accounts</label>
+            <button onclick="toggleAddAccountForm('gemini')" style="background:none;border:none;color:#818cf8;font-size:11.5px;cursor:pointer;font-weight:700;">＋ নতুন Gemini একাউন্ট</button>
+          </div>
+          <div id="gemini-accounts-list" style="max-height:130px;overflow-y:auto;">
+            <div style="color:var(--muted);font-size:11px;">লোড হচ্ছে…</div>
+          </div>
+          <div id="add-gemini-account-form" style="display:none;background:rgba(0,0,0,0.4);padding:8px;border-radius:8px;border:1px solid var(--stroke);margin-top:8px;">
+            <input type="text" id="new-gemini-name" placeholder="নাম (যেমন: Gemini Pro 1)" style="width:100%;font-size:11px;background:#0d0d14;color:#f4f4f8;padding:6px;border-radius:6px;border:1px solid var(--stroke);margin-bottom:6px;">
+            <textarea id="new-gemini-cookies" rows="2" placeholder="gemini.google.com-এর কুকি পেস্ট করুন..." style="width:100%;font-size:11px;font-family:monospace;background:#0d0d14;color:#f4f4f8;padding:6px;border-radius:6px;border:1px solid var(--stroke);resize:none;margin-bottom:6px;"></textarea>
+            <div style="display:flex;gap:6px;justify-content:flex-end;">
+              <button onclick="toggleAddAccountForm('gemini')" style="padding:3px 8px;background:none;border:1px solid var(--stroke);color:var(--muted);border-radius:6px;font-size:11px;cursor:pointer;">বাতিল</button>
+              <button onclick="submitNewAccount('gemini')" style="padding:3px 10px;background:#4f46e5;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">সেভ</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <label style="font-size:11.5px;font-weight:700;color:#c7d2fe;display:block;margin-bottom:3px;">
+            gemini.google.com অটো-সিঙ্ক বুকমার্কলেট
+          </label>
+          <div style="position:relative;">
+            <input type="text" readonly id="gemini-bookmarklet-code" style="width:100%;font-size:10.5px;font-family:monospace;background:#0d0d14;color:#a5b4fc;padding:7px 30px 7px 8px;border-radius:7px;border:1px solid var(--stroke);">
+            <button onclick="copyBookmarklet('gemini')" style="position:absolute;right:5px;top:5px;background:none;border:none;color:#818cf8;cursor:pointer;font-size:13px;" title="কপি">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <label style="font-size:11.5px;font-weight:700;color:#c7d2fe;display:block;margin-bottom:3px;">
+            সরাসরি Gemini কুকি পেস্ট
+          </label>
+          <textarea id="gemini-cookie-input" rows="2" placeholder="gemini.google.com-এর কুকি স্ট্রিং বা JSON..." style="width:100%;font-size:11px;font-family:monospace;background:#0d0d14;color:#f4f4f8;padding:6px;border-radius:7px;border:1px solid var(--stroke);resize:none;"></textarea>
+        </div>
+
+        <div style="display:flex;gap:6px;">
+          <button onclick="submitCookieSync('gemini')" style="flex:1;padding:8px;background:var(--grad);color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:12px;">
+            Gemini কুকি সেভ ও কানেক্ট
+          </button>
+          <button onclick="refreshAuthStatus('gemini');loadAccounts('gemini');" style="padding:8px 12px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid var(--stroke);border-radius:8px;cursor:pointer;font-size:12px;">
+            চেক
+          </button>
+        </div>
+      </div>
+
+      <!-- FLOW TAB CONTENT -->
+      <div id="flow-auth-tab" style="display:none;">
+        <div id="flow-auth-status-box" style="padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid var(--stroke);margin-bottom:12px;font-size:12.5px;line-height:1.6;">
+          Google Flow স্ট্যাটাস লোড হচ্ছে…
+        </div>
+
+        <div style="margin-bottom:12px;padding:10px;background:rgba(255,255,255,0.02);border:1px solid var(--stroke);border-radius:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <label style="font-size:12px;font-weight:700;color:#c7d2fe;">Google Flow Multiple Accounts</label>
+            <button onclick="toggleAddAccountForm('flow')" style="background:none;border:none;color:#818cf8;font-size:11.5px;cursor:pointer;font-weight:700;">＋ নতুন Flow একাউন্ট</button>
+          </div>
+          <div id="flow-accounts-list" style="max-height:130px;overflow-y:auto;">
+            <div style="color:var(--muted);font-size:11px;">লোড হচ্ছে…</div>
+          </div>
+          <div id="add-flow-account-form" style="display:none;background:rgba(0,0,0,0.4);padding:8px;border-radius:8px;border:1px solid var(--stroke);margin-top:8px;">
+            <input type="text" id="new-flow-name" placeholder="নাম (যেমন: Flow Pro 1)" style="width:100%;font-size:11px;background:#0d0d14;color:#f4f4f8;padding:6px;border-radius:6px;border:1px solid var(--stroke);margin-bottom:6px;">
+            <textarea id="new-flow-cookies" rows="2" placeholder="flow.google.com-এর কুকি পেস্ট করুন..." style="width:100%;font-size:11px;font-family:monospace;background:#0d0d14;color:#f4f4f8;padding:6px;border-radius:6px;border:1px solid var(--stroke);resize:none;margin-bottom:6px;"></textarea>
+            <div style="display:flex;gap:6px;justify-content:flex-end;">
+              <button onclick="toggleAddAccountForm('flow')" style="padding:3px 8px;background:none;border:1px solid var(--stroke);color:var(--muted);border-radius:6px;font-size:11px;cursor:pointer;">বাতিল</button>
+              <button onclick="submitNewAccount('flow')" style="padding:3px 10px;background:#4f46e5;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;">সেভ</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <label style="font-size:11.5px;font-weight:700;color:#c7d2fe;display:block;margin-bottom:3px;">
+            flow.google.com অটো-সিঙ্ক বুকমার্কলেট
+          </label>
+          <div style="position:relative;">
+            <input type="text" readonly id="flow-bookmarklet-code" style="width:100%;font-size:10.5px;font-family:monospace;background:#0d0d14;color:#a5b4fc;padding:7px 30px 7px 8px;border-radius:7px;border:1px solid var(--stroke);">
+            <button onclick="copyBookmarklet('flow')" style="position:absolute;right:5px;top:5px;background:none;border:none;color:#818cf8;cursor:pointer;font-size:13px;" title="কপি">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <label style="font-size:11.5px;font-weight:700;color:#c7d2fe;display:block;margin-bottom:3px;">
+            সরাসরি Google Flow কুকি পেস্ট
+          </label>
+          <textarea id="flow-cookie-input" rows="2" placeholder="flow.google.com-এর কুকি স্ট্রিং বা JSON..." style="width:100%;font-size:11px;font-family:monospace;background:#0d0d14;color:#f4f4f8;padding:6px;border-radius:7px;border:1px solid var(--stroke);resize:none;"></textarea>
+        </div>
+
+        <div style="display:flex;gap:6px;">
+          <button onclick="submitCookieSync('flow')" style="flex:1;padding:8px;background:var(--grad);color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:12px;">
+            Flow কুকি সেভ ও কানেক্ট
+          </button>
+          <button onclick="refreshAuthStatus('flow');loadAccounts('flow');" style="padding:8px 12px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid var(--stroke);border-radius:8px;cursor:pointer;font-size:12px;">
+            চেক
+          </button>
+        </div>
+      </div>
+
+      <!-- Keepalive Security Note -->
+      <div style="margin-top:12px;padding:9px 12px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.22);border-radius:10px;font-size:11px;color:#a7f3d0;line-height:1.55;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><strong>নিরাপদ পৃথক সেশন ভল্ট:</strong> Gemini এবং Google Flow সম্পূর্ণ আলাদা ডোমেইন ও সেশন। দুটোকে আলাদা ভল্টে রাখা হয়েছে যাতে CookieMismatch না হয়।
+      </div>
+    </div>
+  </div>
+
+  <div class="settings" id="settings">
+    <div class="settings-card">
+      <label>API ঠিকানা</label>
+      <input type="url" id="api-url" value="" placeholder="https://e887fab5b73170.app.lhr.life">
+      <label>API Key</label>
+      <input type="password" id="api-key" value="">
+      <p>ঠিকানা খালি রাখলে এই পেজের সার্ভারই ব্যবহার হবে। এই ফাইলটা কাউকে দিও না — ভেতরে তোমার API Key আছে।</p>
+    </div>
+  </div>
+
+  <div id="chat">
+    <div class="hero" id="hero">
+      <div class="spark">✦</div>
+      <h2>হাই, আমি <span class="grad-text">Gaymini</span></h2>
+      <p>Argon 4 গভীরভাবে বিশ্লেষণ করে, Hydrogen দ্রুত উত্তর দেয়।<br>Nano Banana Pro ও Google Flow দিয়ে আনলিমিটেড হাই-কোয়ালিটি ছবি ও মোশন ভিডিও তৈরি করুন।</p>
+      <div class="suggest">
+        <button class="s-card" onclick="askChip(this)"><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div><div class="t">একটা গল্প লিখে দাও</div><div class="d">ছোট, রোমাঞ্চকর গল্প</div></button>
+        <button class="s-card" onclick="askChip(this)"><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div><div class="t">কোড লিখতে সাহায্য করো</div><div class="d">Python, JavaScript ও অন্যান্য</div></button>
+        <button class="s-card" onclick="askChip(this)"><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div><div class="t">Naruto vs Sasuke ছবি বানাও</div><div class="d">Nano Banana Pro দিয়ে</div></button>
+        <button class="s-card" onclick="askChip(this)"><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg></div><div class="t">অ্যানিমেশন ভিডিও বানাও</div><div class="d">Cinematic Motion Engine</div></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="model-switch">
+      <button id="btn-argon" class="active" onclick="selectModel('gemini-4-argon')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>Argon 4
+      </button>
+      <button id="btn-hydrogen" onclick="selectModel('gemini-4-hydrogen')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>Hydrogen
+      </button>
+    </div>
+    <div class="mode-row" id="mode-row">
+      <button id="mode-chat" class="mode-btn active" onclick="selectMode('chat')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>চ্যাট
+      </button>
+      <button id="mode-generate" class="mode-btn" onclick="selectMode('generate')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>ছবি বানাও
+      </button>
+      <button id="mode-edit" class="mode-btn" onclick="selectMode('edit')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>ছবি এডিট
+      </button>
+      <button id="mode-video" class="mode-btn" onclick="selectMode('video')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>ভিডিও স্টুডিও
+      </button>
+    </div>
+    <div class="img-preview" id="img-preview" style="display:none">
+      <img id="img-preview-thumb" alt="ছবি">
+      <span id="img-preview-name"></span>
+      <button onclick="removeImage()" title="ছবি সরাও">✕</button>
+    </div>
+    <div class="engine-row" id="image-model-row" style="display:none">
+      <span style="font-weight:700;color:#c7d2fe;font-size:11.5px;">মডেল:</span>
+      <button id="img-mod-nano" class="engine-btn active" onclick="selectImageModel('nano-banana-pro')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>Nano Banana Pro (Unlimited)
+      </button>
+      <button id="img-mod-flow" class="engine-btn" onclick="selectImageModel('flow')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:3px;"><path d="M2 12h20M2 6h20M2 18h20"></path></svg>Google Flow (Imagen 3)
+      </button>
+    </div>
+    <div class="engine-row" id="engine-row" style="display:none">
+      <span>এডিট করবে:</span>
+      <button id="eng-azad" class="engine-btn active" onclick="selectEngine('azad')">Azad AI</button>
+      <button id="eng-google" class="engine-btn" onclick="selectEngine('google')">Google</button>
+    </div>
+    <div class="composer">
+      <button class="attach-btn" onclick="document.getElementById('image-input').click()" title="ছবি যোগ করুন">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+      </button>
+      <input type="file" id="image-input" accept="image/*" hidden onchange="onImagePicked(event)">
+      <textarea id="input" rows="1" placeholder="Gaymini-কে কিছু জিজ্ঞেস করো…" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendMessage()}"></textarea>
+      <button class="send" id="send-btn" onclick="sendMessage()" title="পাঠাও">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
+    </div>
+    <div id="status">সার্ভার: প্রস্তুত</div>
+    <div class="warn">AI ভুল করতে পারে — গুরুত্বপূর্ণ তথ্য যাচাই করে নিন।</div>
+  </div>
+</div>
+
+<script>
+let model = 'gemini-4-argon';
+let history = []; // {role, content} — OpenAI ফরম্যাটে পাঠানো হয়
+let attachedImage = null; // ছবি এডিটের জন্য বেছে নেওয়া ফাইল
+let mode = 'chat'; // chat | generate | edit | video
+let editEngine = 'azad'; // azad | google
+let currentImageModel = 'nano-banana-pro'; // 'nano-banana-pro' | 'flow'
+
+function selectImageModel(mod) {
+  currentImageModel = mod;
+  const nanoBtn = document.getElementById('img-mod-nano');
+  const flowBtn = document.getElementById('img-mod-flow');
+  if (nanoBtn) nanoBtn.classList.toggle('active', mod === 'nano-banana-pro');
+  if (flowBtn) flowBtn.classList.toggle('active', mod === 'flow');
+}
+
+function selectMode(m) {
+  mode = m;
+  ['chat', 'generate', 'edit', 'video'].forEach(x => {
+    const el = document.getElementById('mode-' + x);
+    if (el) el.classList.toggle('active', x === m);
+  });
+  const imgModRow = document.getElementById('image-model-row');
+  if (imgModRow) imgModRow.style.display = (m === 'generate') ? 'flex' : 'none';
+  const engRow = document.getElementById('engine-row');
+  if (engRow) engRow.style.display = (m === 'edit') ? 'flex' : 'none';
+  const inp = document.getElementById('input');
+  inp.placeholder = m === 'generate' ? 'Nano Banana Pro দিয়ে ছবি তৈরি করুন (যেমন: Naruto vs Sasuke fight scene)...'
+    : m === 'edit' ? 'ছবি নির্বাচন করে লিখুন কী পরিবর্তন করতে চান...'
+    : m === 'video' ? 'ভিডিও ও অ্যানিমেশন প্রম্পট লিখুন (যেমন: Naruto and Sasuke fight animation)...'
+    : 'Gaymini-কে কিছু জিজ্ঞেস করুন…';
+  inp.focus();
+}
+
+function selectEngine(e) {
+  editEngine = e;
+  document.getElementById('eng-azad').classList.toggle('active', e === 'azad');
+  document.getElementById('eng-google').classList.toggle('active', e === 'google');
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ছোট মার্কডাউন: কোড ব্লক, ইনলাইন কোড, বোল্ড, হেডিং, লাইন ব্রেক
+function renderMarkdown(text) {
+  const segs = String(text).split('```');
+  let html = '';
+  for (let i = 0; i < segs.length; i++) {
+    if (i % 2 === 1) {
+      html += '<pre><code>' + escapeHtml(segs[i].replace(/^\w+\n/, '')) + '</code></pre>';
+    } else {
+      let t = escapeHtml(segs[i]);
+      t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
+      t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      t = t.replace(/^#{1,3}\s+(.+)$/gm, '<strong>$1</strong>');
+      t = t.replace(/\n/g, '<br>');
+      html += t;
+    }
+  }
+  return html;
+}
+
+function attachCopy(bubble, text) {
+  const wrap = bubble.parentElement;
+  if (!wrap) return;
+  const meta = wrap.querySelector('.meta');
+  if (!meta || meta.querySelector('.copy-btn')) return;
+  const copy = document.createElement('button');
+  copy.className = 'copy-btn';
+  copy.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:2px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> কপি';
+  copy.onclick = () => {
+    const done = () => { copy.textContent = '✓ কপি হয়েছে'; setTimeout(() => { copy.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:2px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> কপি'; }, 1500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+    else fallbackCopy(text, done);
+  };
+  meta.appendChild(document.createTextNode('  '));
+  meta.appendChild(copy);
+}
+
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea');
+  ta.value = text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); done(); } catch (e) {}
+  document.body.removeChild(ta);
+}
+
+function saveHistory() {
+  try { localStorage.setItem('gaymini_history_v1', JSON.stringify(history.slice(-30))); } catch (e) {}
+}
+
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem('gaymini_history_v1');
+    if (!raw) return false;
+    const h = JSON.parse(raw);
+    if (!Array.isArray(h) || !h.length) return false;
+    history = h;
+    hideHero();
+    h.forEach(m => {
+      if (m.role === 'user') addMsg(m.content, 'user');
+      else if (m.role === 'assistant' && m.content && !m.content.startsWith('[এডিট')) addMsg(m.content, 'ai');
+    });
+    return true;
+  } catch (e) { return false; }
+}
+
+function toggleSettings() {
+  document.getElementById('settings').classList.toggle('open');
+}
+
+function onImagePicked(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { alert('শুধু ছবির ফাইল দাও'); return; }
+  if (file.size > 10 * 1024 * 1024) { alert('ছবি 10 MB-এর বেশি হলে চলবে না'); return; }
+  // ফোনের ছবি অনেক বড় হয় (২-৫ MB) — আপলোডে মিনিট লেগে যায়।
+  // তাই পাঠানোর আগেই ফোনে ছোট করে নাও (সবচেয়ে বড় দিক ১২৮০px, JPEG) —
+  // এতে আপলোড কয়েক মিনিটের বদলে কয়েক সেকেন্ডে হবে, এডিটের মান একই থাকবে।
+  const setAttached = (f, compressed) => {
+    attachedImage = f;
+    document.getElementById('img-preview-thumb').src = URL.createObjectURL(f);
+    document.getElementById('img-preview-name').textContent = file.name + (compressed ? ' (ছোট করে নেওয়া হয়েছে — তাড়াতাড়ি যাবে)' : '') + ' — এবার লিখো কী বদলাতে চাও (যেমন: make it sunset)';
+    document.getElementById('img-preview').style.display = 'flex';
+    document.getElementById('engine-row').style.display = 'flex';
+    document.getElementById('input').focus();
+  };
+  if (file.size <= 400 * 1024) { setAttached(file, false); return; }
+  const img = new Image();
+  img.onload = () => {
+    try {
+      const maxSide = 1280;
+      const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob((blob) => {
+        if (blob && blob.size < file.size) {
+          setAttached(new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' }), true);
+        } else {
+          setAttached(file, false);
+        }
+        URL.revokeObjectURL(img.src);
+      }, 'image/jpeg', 0.85);
+    } catch (err) { setAttached(file, false); }
+  };
+  img.onerror = () => setAttached(file, false);
+  img.src = URL.createObjectURL(file);
+}
+
+function removeImage() {
+  attachedImage = null;
+  document.getElementById('image-input').value = '';
+  document.getElementById('img-preview').style.display = 'none';
+  document.getElementById('engine-row').style.display = 'none';
+}
+
+function addImageMsg(src, caption, promptText) {
+  const chat = document.getElementById('chat');
+  const row = document.createElement('div');
+  row.className = 'msg-row ai';
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar ai';
+  avatar.textContent = '✦';
+  const wrap = document.createElement('div');
+  wrap.style.minWidth = '0';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  const img = document.createElement('img');
+  img.className = 'edited-img';
+  img.src = src;
+  img.alt = caption;
+  bubble.appendChild(img);
+  if (promptText) {
+    const p = document.createElement('div');
+    p.textContent = promptText;
+    bubble.appendChild(p);
+  }
+  const dl = document.createElement('a');
+  dl.className = 'dl-link';
+  dl.href = src;
+  dl.download = 'edited-image.png';
+  dl.target = '_blank';
+  dl.rel = 'noopener';
+  dl.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>ছবি ডাউনলোড করুন';
+  bubble.appendChild(dl);
+  wrap.appendChild(bubble);
+  const meta = document.createElement('div');
+  meta.className = 'meta';
+  meta.textContent = caption;
+  wrap.appendChild(meta);
+  row.appendChild(avatar);
+  row.appendChild(wrap);
+  chat.appendChild(row);
+  scrollChat();
+}
+
+function addVideoMsg(videoUrl, caption, promptText) {
+  const chat = document.getElementById('chat');
+  const row = document.createElement('div');
+  row.className = 'msg-row ai';
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar ai';
+  avatar.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>';
+  const wrap = document.createElement('div');
+  wrap.style.minWidth = '0';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble video-card';
+
+  const v = document.createElement('video');
+  v.src = videoUrl;
+  v.controls = true;
+  v.autoplay = true;
+  v.loop = true;
+  v.playsInline = true;
+  bubble.appendChild(v);
+
+  if (promptText) {
+    const p = document.createElement('div');
+    p.style.fontSize = '12px';
+    p.style.color = 'var(--muted)';
+    p.style.margin = '6px 0';
+    p.textContent = promptText;
+    bubble.appendChild(p);
+  }
+
+  const dl = document.createElement('a');
+  dl.className = 'dl-link';
+  dl.href = videoUrl;
+  dl.download = 'animation-video.mp4';
+  dl.target = '_blank';
+  dl.rel = 'noopener';
+  dl.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>ভিডিও ডাউনলোড করুন';
+  dl.textContent = '⬇️ ভিডিওটা ডাউনলোড করো (.MP4)';
+  bubble.appendChild(dl);
+
+  wrap.appendChild(bubble);
+  const meta = document.createElement('div');
+  meta.className = 'meta';
+  meta.textContent = caption;
+  wrap.appendChild(meta);
+  row.appendChild(avatar);
+  row.appendChild(wrap);
+  chat.appendChild(row);
+  scrollChat();
+}
+
+function switchAuthTab(svc) {
+  const isGemini = svc === 'gemini';
+  document.getElementById('gemini-auth-tab').style.display = isGemini ? 'block' : 'none';
+  document.getElementById('flow-auth-tab').style.display = isGemini ? 'none' : 'block';
+  document.getElementById('tab-gemini-btn').classList.toggle('active', isGemini);
+  document.getElementById('tab-flow-btn').classList.toggle('active', !isGemini);
+}
+
+function openAuthModal() {
+  document.getElementById('auth-modal').style.display = 'flex';
+  const origin = window.location.origin.startsWith('http') ? window.location.origin : 'http://192.168.0.112:5000';
+  
+  const gbm = document.getElementById('gemini-bookmarklet-code');
+  if (gbm) {
+    gbm.value = `javascript:(function(){fetch('${origin}/api/gemini/auth/sync',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cookies:document.cookie})}).then(r=>r.json()).then(d=>alert('Gemini Synced! 1PSIDTS: '+(d.has_psidts?'YES':'NO'))).catch(e=>alert('Err: '+e));})();`;
+  }
+  
+  const fbm = document.getElementById('flow-bookmarklet-code');
+  if (fbm) {
+    fbm.value = `javascript:(function(){fetch('${origin}/api/flow/auth/sync',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cookies:document.cookie})}).then(r=>r.json()).then(d=>alert('Google Flow Synced! '+((d.auth&&d.auth.detail)||'Done'))).catch(e=>alert('Err: '+e));})();`;
+  }
+
+  const phoneEl = document.getElementById('phone-url');
+  if (phoneEl && window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    phoneEl.textContent = window.location.origin;
+  }
+  refreshAuthStatus('gemini');
+  refreshAuthStatus('flow');
+  loadAccounts('gemini');
+  loadAccounts('flow');
+}
+
+function closeAuthModal() {
+  document.getElementById('auth-modal').style.display = 'none';
+}
+
+function copyBookmarklet(svc) {
+  const id = svc === 'flow' ? 'flow-bookmarklet-code' : 'gemini-bookmarklet-code';
+  const code = document.getElementById(id);
+  if (!code) return;
+  code.select();
+  const domain = svc === 'flow' ? 'flow.google.com' : 'gemini.google.com';
+  navigator.clipboard.writeText(code.value).then(() => {
+    alert(`বুকমার্কলেট কোড কপি হয়েছে! ${domain}-এ যেয়ে বুকমার্কে চালান।`);
+  }).catch(() => {
+    document.execCommand('copy');
+    alert('কপি হয়েছে!');
+  });
+}
+
+function copyPhoneUrl() {
+  const el = document.getElementById('phone-url');
+  if (el) {
+    navigator.clipboard.writeText(el.textContent.trim()).then(() => alert('ফোন URL কপি হয়েছে! ফোনে ব্রাউজার খুলে পেস্ট করুন।')).catch(() => alert('কপি হয়েছে!'));
+  }
+}
+
+async function refreshAuthStatus(svc) {
+  const isFlow = svc === 'flow';
+  const box = document.getElementById(isFlow ? 'flow-auth-status-box' : 'gemini-auth-status-box');
+  const dot = document.getElementById('auth-dot');
+  if (box) box.innerHTML = `${isFlow ? 'Flow' : 'Gemini'} স্ট্যাটাস যাচাই হচ্ছে…`;
+  try {
+    const rawUrl = document.getElementById('api-url').value.trim();
+    const base = (rawUrl || (window.location.origin.startsWith('http') ? window.location.origin : '')).replace(/\/$/, '');
+    const endpoint = isFlow ? '/api/flow/auth/status' : '/api/gemini/auth/status';
+    const res = await fetch(base + endpoint);
+    const d = await res.json();
+    if (d.authenticated) {
+      if (!isFlow && dot) { dot.style.background = '#34d399'; dot.style.boxShadow = '0 0 6px #34d399'; }
+      if (box) {
+        box.innerHTML = `
+          <div style="color:#34d399;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
+            <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#34d399;"></span>
+            ${isFlow ? 'Google Flow' : 'Gemini'} সেশন সক্রিয়!
+          </div>
+          <div style="color:var(--text);font-size:12px;">${escapeHtml(d.detail || 'ভেরিফাইড')}</div>
+          <div style="color:var(--muted);font-size:11px;margin-top:4px;">কুকি সংখ্যা: ${d.cookies_count || 0}টি</div>
+        `;
+      }
+    } else {
+      if (!isFlow && dot) { dot.style.background = '#f87171'; dot.style.boxShadow = '0 0 6px #f87171'; }
+      if (box) {
+        box.innerHTML = `
+          <div style="color:#f87171;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
+            <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#f87171;"></span>
+            ${isFlow ? 'Google Flow' : 'Gemini'} ডিসকানেক্টেড / কুকি নেই
+          </div>
+          <div style="color:#fbbf24;font-size:12px;">${escapeHtml(d.detail || 'কুকি দিন')}</div>
+        `;
+      }
+    }
+  } catch (e) {
+    if (box) box.innerHTML = `<div style="color:#fbbf24;">সার্ভার চেক করা যায়নি: ${e.message}</div>`;
+  }
+}
+
+async function loadAccounts(svc) {
+  const isFlow = svc === 'flow';
+  const container = document.getElementById(isFlow ? 'flow-accounts-list' : 'gemini-accounts-list');
+  if (!container) return;
+  try {
+    const rawUrl = document.getElementById('api-url').value.trim();
+    const base = (rawUrl || (window.location.origin.startsWith('http') ? window.location.origin : '')).replace(/\/$/, '');
+    const endpoint = isFlow ? '/api/flow/accounts' : '/api/gemini/accounts';
+    const res = await fetch(base + endpoint);
+    const d = await res.json();
+    if (!res.ok || !d.accounts || !d.accounts.length) {
+      container.innerHTML = '<div style="color:var(--muted);font-size:11px;padding:4px;">কোনো একাউন্ট পাওয়া যায়নি।</div>';
+      return;
+    }
+    let html = '';
+    for (const acc of d.accounts) {
+      const isActive = acc.is_active;
+      html += `
+        <div class="acc-item ${isActive ? 'active' : ''}">
+          <div style="flex:1;overflow:hidden;padding-right:8px;">
+            <div style="font-weight:700;color:${isActive ? '#818cf8' : '#e0e7ff'};display:flex;align-items:center;gap:6px;">
+              <span>${escapeHtml(acc.name)}</span>
+              ${isActive ? '<span class="badge-active">ACTIVE</span>' : ''}
+            </div>
+            <div style="font-size:10.5px;color:var(--muted);margin-top:2px;">
+              কুকি: ${acc.cookies_count}টি ${acc.has_1psidts ? '• 1PSIDTS ✓' : ''}
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            ${!isActive ? `<button class="btn-sm btn-switch" onclick="switchAccount('${svc}', '${escapeHtml(acc.id)}')">সুইচ</button>` : ''}
+            ${!acc.id.includes('default') ? `<button class="btn-sm btn-del" onclick="deleteAccount('${svc}', '${escapeHtml(acc.id)}')">মুছুন</button>` : ''}
+          </div>
+        </div>
+      `;
+    }
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = `<div style="color:#f87171;font-size:11px;">লোড এরর: ${e.message}</div>`;
+  }
+}
+
+async function switchAccount(svc, id) {
+  const isFlow = svc === 'flow';
+  try {
+    const rawUrl = document.getElementById('api-url').value.trim();
+    const base = (rawUrl || (window.location.origin.startsWith('http') ? window.location.origin : '')).replace(/\/$/, '');
+    const endpoint = isFlow ? '/api/flow/accounts/switch' : '/api/gemini/accounts/switch';
+    const res = await fetch(base + endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: id })
+    });
+    const d = await res.json();
+    if (res.ok) {
+      alert(`${isFlow ? 'Flow' : 'Gemini'} একাউন্ট সফলভাবে সুইচ করা হয়েছে!`);
+      loadAccounts(svc);
+      refreshAuthStatus(svc);
+    } else {
+      alert('সুইচ ব্যর্থ: ' + (d.error || 'অজানা ত্রুটি'));
+    }
+  } catch (e) {
+    alert('এরর: ' + e.message);
+  }
+}
+
+function toggleAddAccountForm(svc) {
+  const id = svc === 'flow' ? 'add-flow-account-form' : 'add-gemini-account-form';
+  const form = document.getElementById(id);
+  if (form) form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+
+async function submitNewAccount(svc) {
+  const isFlow = svc === 'flow';
+  const nameInp = document.getElementById(isFlow ? 'new-flow-name' : 'new-gemini-name');
+  const cookieInp = document.getElementById(isFlow ? 'new-flow-cookies' : 'new-gemini-cookies');
+  const name = (nameInp.value || '').trim();
+  const cookies = (cookieInp.value || '').trim();
+  if (!cookies) {
+    alert('কুকি পেস্ট করুন!');
+    return;
+  }
+  try {
+    const rawUrl = document.getElementById('api-url').value.trim();
+    const base = (rawUrl || (window.location.origin.startsWith('http') ? window.location.origin : '')).replace(/\/$/, '');
+    const endpoint = isFlow ? '/api/flow/accounts/add' : '/api/gemini/accounts/add';
+    const res = await fetch(base + endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name || `${isFlow ? 'Flow' : 'Gemini'} Account`, cookies: cookies })
+    });
+    const d = await res.json();
+    if (res.ok) {
+      alert('নতুন একাউন্ট ভল্টে যুক্ত হয়েছে!');
+      nameInp.value = '';
+      cookieInp.value = '';
+      toggleAddAccountForm(svc);
+      loadAccounts(svc);
+      refreshAuthStatus(svc);
+    } else {
+      alert('যুক্ত করতে ব্যর্থ: ' + (d.error || 'অজানা ত্রুটি'));
+    }
+  } catch (e) {
+    alert('এরর: ' + e.message);
+  }
+}
+
+async function deleteAccount(svc, id) {
+  if (!confirm('এই একাউন্টটি মুছে ফেলতে চান?')) return;
+  const isFlow = svc === 'flow';
+  try {
+    const rawUrl = document.getElementById('api-url').value.trim();
+    const base = (rawUrl || (window.location.origin.startsWith('http') ? window.location.origin : '')).replace(/\/$/, '');
+    const endpoint = isFlow ? '/api/flow/accounts/delete' : '/api/gemini/accounts/delete';
+    const res = await fetch(base + endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: id })
+    });
+    const d = await res.json();
+    if (res.ok) {
+      alert('একাউন্ট মুছে ফেলা হয়েছে!');
+      loadAccounts(svc);
+      refreshAuthStatus(svc);
+    } else {
+      alert('মুছতে ব্যর্থ: ' + (d.error || 'অজানা ত্রুটি'));
+    }
+  } catch (e) {
+    alert('এরর: ' + e.message);
+  }
+}
+
+async function submitCookieSync(svc) {
+  const isFlow = svc === 'flow';
+  const inp = document.getElementById(isFlow ? 'flow-cookie-input' : 'gemini-cookie-input');
+  const raw = inp.value.trim();
+  if (!raw) {
+    alert('আগে কুকি পেস্ট করুন!');
+    inp.focus();
+    return;
+  }
+  const box = document.getElementById(isFlow ? 'flow-auth-status-box' : 'gemini-auth-status-box');
+  if (box) box.innerHTML = '⏳ কুকি সিঙ্ক হচ্ছে…';
+  try {
+    const rawUrl = document.getElementById('api-url').value.trim();
+    const base = (rawUrl || (window.location.origin.startsWith('http') ? window.location.origin : '')).replace(/\/$/, '');
+    const endpoint = isFlow ? '/api/flow/auth/sync' : '/api/gemini/auth/sync';
+    const res = await fetch(base + endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cookies: raw })
+    });
+    const d = await res.json();
+    if (res.ok) {
+      alert(`${isFlow ? 'Google Flow' : 'Gemini'} সেশন সফলভাবে সিঙ্ক হয়েছে!`);
+      inp.value = '';
+      refreshAuthStatus(svc);
+      loadAccounts(svc);
+    } else {
+      alert('সিঙ্ক ত্রুটি: ' + (d.error || 'অজানা ত্রুটি'));
+      refreshAuthStatus(svc);
+    }
+  } catch (e) {
+    alert('সার্ভার এরর: ' + e.message);
+    refreshAuthStatus(svc);
+  }
+}
+
+const HERO_HTML = document.getElementById('hero').outerHTML;
+function newChat() {
+  history = [];
+  try { localStorage.removeItem('gaymini_history_v1'); } catch (e) {}
+  document.getElementById('chat').innerHTML = HERO_HTML;
+  document.getElementById('status').textContent = 'নতুন চ্যাট শুরু হলো';
+  document.getElementById('input').focus();
+}
+
+function selectModel(m) {
+  model = m;
+  document.getElementById('btn-argon').classList.toggle('active', m === 'gemini-4-argon');
+  document.getElementById('btn-hydrogen').classList.toggle('active', m === 'gemini-4-hydrogen');
+}
+
+function askChip(btn) {
+  document.getElementById('input').value = btn.querySelector('.t').textContent;
+  sendMessage();
+}
+
+function scrollChat() {
+  const chat = document.getElementById('chat');
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function hideHero() {
+  const hero = document.getElementById('hero');
+  if (hero) hero.remove();
+}
+
+function addMsg(text, who) { // who: 'user' | 'ai' | 'err'
+  const chat = document.getElementById('chat');
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + (who === 'user' ? 'user' : who === 'err' ? 'ai err' : 'ai');
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar ' + (who === 'user' ? 'user' : 'ai');
+  avatar.innerHTML = who === 'user' 
+    ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>' 
+    : '✦';
+  const wrap = document.createElement('div');
+  wrap.style.minWidth = '0';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  if (who === 'ai' && text) bubble.innerHTML = renderMarkdown(text);
+  else bubble.textContent = text;
+  wrap.appendChild(bubble);
+  const meta = document.createElement('div');
+  meta.className = 'meta';
+  meta.textContent = who === 'user' ? 'তুমি' : (who === 'err' ? 'ভুল হয়েছে' : (model === 'gemini-4-argon' ? 'Argon 4' : 'Hydrogen'));
+  wrap.appendChild(meta);
+  row.appendChild(avatar);
+  row.appendChild(wrap);
+  chat.appendChild(row);
+  scrollChat();
+  if (who === 'ai' && text) attachCopy(bubble, text);
+  return bubble;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('input');
+  const text = input.value.trim();
+  const rawUrl = document.getElementById('api-url').value.trim();
+  const base = (rawUrl || (window.location.origin.startsWith('http') ? window.location.origin : 'https://e887fab5b73170.app.lhr.life')).replace(/\/$/, '');
+  const apiKey = document.getElementById('api-key').value.trim();
+  const btn = document.getElementById('send-btn');
+  const status = document.getElementById('status');
+
+  // ---- ছবি এডিট মোড ----
+  if (mode === 'edit' && !attachedImage) {
+    status.textContent = 'আগে ছবি নির্বাচন করুন, তারপর লিখুন কী পরিবর্তন করতে চান';
+    return;
+  }
+  if (attachedImage) {
+    if (!text) { status.textContent = 'আগে লিখো ছবিতে কী বদলাতে চাও (যেমন: make it sunset)'; input.focus(); return; }
+    const file = attachedImage;
+    const prompt = text;
+    const engineLabel = editEngine === 'google' ? 'Google' : 'Azad AI';
+    hideHero();
+    addImageMsg(URL.createObjectURL(file), 'তোমার ছবি', prompt);
+    history.push({ role: 'user', content: '[ছবি এডিট] ' + prompt });
+    saveHistory();
+    input.value = '';
+    input.style.height = 'auto';
+    removeImage();
+    btn.disabled = true;
+    const thinking = addMsg('', 'ai');
+    thinking.innerHTML = '<span class="typing"><span></span><span></span><span></span></span> ছবি এডিট হচ্ছে… ৩০–৬০ সেকেন্ড লাগতে পারে';
+    status.textContent = 'ছবি এডিট হচ্ছে... (' + engineLabel + ')';
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      fd.append('prompt', prompt);
+      fd.append('origin', window.location.origin.startsWith('http') ? window.location.origin : base);
+      const editUrl = editEngine === 'google' ? '/edit-image-google' : '/edit-image';
+      const startRes = await fetch(base + editUrl, { method: 'POST', headers: { 'x-api-key': apiKey }, body: fd });
+      if (!startRes.ok) {
+        let msg = 'HTTP ' + startRes.status;
+        try { const d = await startRes.json(); msg = (d.error && d.error.message) || msg; } catch (e) {}
+        throw new Error(msg);
+      }
+      const start = await startRes.json();
+      const jobId = start.job;
+      if (!jobId) throw new Error('এডিট শুরু হয়নি');
+      // এডিট ১-৪ মিনিট লাগে — ৪ সেকেন্ড পর পর স্ট্যাটাস চেক করো
+      let done = null;
+      for (let i = 0; i < 90; i++) {
+        await new Promise(r => setTimeout(r, 4000));
+        const sres = await fetch(base + '/edit-status/' + jobId, { headers: { 'x-api-key': apiKey } });
+        const s = await sres.json();
+        if (s.status === 'done' && s.image_url) { done = s; break; }
+        if (s.status === 'error') throw new Error(s.message || 'edit failed');
+        const prog = s.progress || 'ছবি এডিট হচ্ছে…';
+        thinking.innerHTML = '<span class="typing"><span></span><span></span><span></span></span> ' + prog;
+        status.textContent = prog;
+      }
+      if (!done) throw new Error('অনেক সময় লাগছে — একটু পরে আবার চেষ্টা করো');
+      thinking.parentElement.parentElement.remove();
+      addImageMsg(done.image_url, 'এডিট করা ছবি ✓ (' + engineLabel + ')', prompt);
+      history.push({ role: 'assistant', content: '[এডিট করা ছবি দেওয়া হয়েছে]' });
+      saveHistory();
+      status.textContent = 'ছবি এডিট হয়েছে ✓';
+    } catch (e) {
+      thinking.textContent = 'ছবি এডিট হয়নি: ' + e.message + '\nআবার চেষ্টা করো।';
+      thinking.parentElement.parentElement.classList.add('err');
+      status.textContent = 'ভুল: ' + e.message;
+    }
+    btn.disabled = false;
+    scrollChat();
+    return;
+  }
+
+  // ---- ছবি বানাও মোড (Nano Banana Pro / Google Flow) ----
+  if (mode === 'generate') {
+    if (!text) return;
+    hideHero();
+    addMsg(text, 'user');
+    const modelLabel = currentImageModel === 'flow' ? 'Google Flow (Imagen 3)' : 'Gemini Imagen';
+    history.push({ role: 'user', content: `[ছবি বানাও - ${modelLabel}] ` + text });
+    saveHistory();
+    input.value = '';
+    input.style.height = 'auto';
+    btn.disabled = true;
+    const thinking = addMsg('', 'ai');
+    thinking.innerHTML = `<span class="typing"><span></span><span></span><span></span></span> ${modelLabel} ছবি বানাচ্ছে…`;
+    status.textContent = `${modelLabel} দিয়ে ছবি বানানো হচ্ছে...`;
+    try {
+      const fd = new FormData();
+      fd.append('prompt', text);
+      fd.append('model', currentImageModel);
+      fd.append('origin', window.location.origin.startsWith('http') ? window.location.origin : base);
+      const startRes = await fetch(base + '/generate-image', { method: 'POST', headers: { 'x-api-key': apiKey }, body: fd });
+      if (!startRes.ok) {
+        let msg = 'HTTP ' + startRes.status;
+        try { const d = await startRes.json(); msg = (d.error && d.error.message) || msg; } catch (e) {}
+        throw new Error(msg);
+      }
+      const start = await startRes.json();
+      const jobId = start.job;
+      if (!jobId) throw new Error('ছবি বানানো শুরু হয়নি');
+      let done = null;
+      for (let i = 0; i < 90; i++) {
+        await new Promise(r => setTimeout(r, 4000));
+        const sres = await fetch(base + '/edit-status/' + jobId, { headers: { 'x-api-key': apiKey } });
+        const s = await sres.json();
+        if (s.status === 'done' && s.image_url) { done = s; break; }
+        if (s.status === 'error') throw new Error(s.message || 'ছবি বানানো যায়নি');
+        const prog = s.progress || `${modelLabel} ছবি বানাচ্ছে…`;
+        thinking.innerHTML = '<span class="typing"><span></span><span></span><span></span></span> ' + prog;
+        status.textContent = prog;
+      }
+      if (!done) throw new Error('অনেক সময় লাগছে — একটু পরে আবার চেষ্টা করো');
+      thinking.parentElement.parentElement.remove();
+      const isFound = done.source === 'search';
+      const isFlow = done.source === 'flow';
+      const finalTag = isFlow ? 'Google Flow (Imagen 3) ছবি ✓' : (isFound ? 'Google-এ পাওয়া ছবি' : 'Gemini Imagen দিয়ে বানানো ছবি ✓');
+      addImageMsg(done.image_url, finalTag, text);
+      history.push({ role: 'assistant', content: isFound ? '[Google-এ পাওয়া ছবি দেওয়া হয়েছে]' : `[${finalTag} দেওয়া হয়েছে]` });
+      saveHistory();
+      status.textContent = finalTag;
+    } catch (e) {
+      thinking.textContent = 'ছবি বানানো যায়নি: ' + e.message;
+      thinking.parentElement.parentElement.classList.add('err');
+      status.textContent = 'ভুল: ' + e.message;
+    }
+    btn.disabled = false;
+    scrollChat();
+    return;
+  }
+
+  // ---- ভিডিও মোড (Google Flow & Veo 3.1) ----
+  if (mode === 'video') {
+    if (!text && !attachedImage) {
+      status.textContent = 'ভিডিওর জন্য প্রম্পট লিখো (যেমন: cinematic drone shot of cyberpunk city in rain)';
+      input.focus();
+      return;
+    }
+    const prompt = text || 'Animate this image into high quality cinematic video';
+    const file = attachedImage;
+    hideHero();
+    if (file) {
+      addImageMsg(URL.createObjectURL(file), 'ভিডিও রেফারেন্স ছবি', prompt);
+      history.push({ role: 'user', content: '[ছবি থেকে ভিডিও] ' + prompt });
+    } else {
+      addMsg(prompt, 'user');
+      history.push({ role: 'user', content: '[টেক্সট থেকে ভিডিও] ' + prompt });
+    }
+    saveHistory();
+    input.value = '';
+    input.style.height = 'auto';
+    if (file) removeImage();
+    btn.disabled = true;
+
+    const thinking = addMsg('', 'ai');
+    thinking.innerHTML = '<span class="typing"><span></span><span></span><span></span></span> ভিডিও ও অ্যানিমেশন প্রসেস হচ্ছে…';
+    status.textContent = 'ভিডিও তৈরি হচ্ছে...';
+
+    try {
+      const fd = new FormData();
+      fd.append('prompt', prompt);
+      if (file) fd.append('image', file);
+      fd.append('origin', window.location.origin.startsWith('http') ? window.location.origin : base);
+
+      const startRes = await fetch(base + '/generate-video', { method: 'POST', headers: { 'x-api-key': apiKey }, body: fd });
+      if (!startRes.ok) {
+        let msg = 'HTTP ' + startRes.status;
+        try { const d = await startRes.json(); msg = (d.error && d.error.message) || msg; } catch (e) {}
+        throw new Error(msg);
+      }
+      const start = await startRes.json();
+      const jobId = start.job;
+      if (!jobId) throw new Error('ভিডিও প্রসেসিং শুরু হয়নি');
+
+      let done = null;
+      for (let i = 0; i < 90; i++) {
+        await new Promise(r => setTimeout(r, 4000));
+        const sres = await fetch(base + '/video-status/' + jobId, { headers: { 'x-api-key': apiKey } });
+        const s = await sres.json();
+        if (s.status === 'done' && s.video_url) { done = s; break; }
+        if (s.status === 'error') throw new Error(s.error || s.message || 'Video generation failed');
+        const prog = s.progress || 'Veo ভিডিও রেন্ডার করছে…';
+        thinking.innerHTML = '<span class="typing"><span></span><span></span><span></span></span> ' + prog;
+        status.textContent = prog;
+      }
+      if (!done) throw new Error('ভিডিও তৈরিতে অনেক সময় লাগছে — একটু পরে আবার চেষ্টা করো');
+
+      thinking.parentElement.parentElement.remove();
+      addVideoMsg(done.video_url, 'Google Flow • Veo 3.1 ভিডিও ✓', prompt);
+      history.push({ role: 'assistant', content: '[ভিডিও সম্পন্ন হয়েছে: ' + done.video_url + ']' });
+      saveHistory();
+      status.textContent = 'ভিডিও সম্পন্ন হয়েছে ✓';
+    } catch (e) {
+      thinking.textContent = 'ভিডিও তৈরি করা যায়নি: ' + e.message + '\nকুকি বা Google Flow সেশন চেক করতে পারো।';
+      thinking.parentElement.parentElement.classList.add('err');
+      status.textContent = 'ভুল: ' + e.message;
+    }
+    btn.disabled = false;
+    scrollChat();
+    return;
+  }
+
+  // ---- সাধারণ চ্যাট মোড ----
+  if (!text) return;
+
+  hideHero();
+  addMsg(text, 'user');
+  history.push({ role: 'user', content: text });
+  saveHistory();
+  input.value = '';
+  input.style.height = 'auto';
+  btn.disabled = true;
+  const thinking = addMsg('', 'ai');
+  thinking.innerHTML = '<span class="typing"><span></span><span></span><span></span></span>';
+  status.textContent = 'পাঠানো হয়েছে, উত্তরের অপেক্ষায়...';
+
+  try {
+    const res = await fetch(base + '/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
+      body: JSON.stringify({ model: model, messages: history })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error((data.error && data.error.message) || ('HTTP ' + res.status));
+    const reply = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '(খালি উত্তর)';
+    thinking.innerHTML = renderMarkdown(reply);
+    attachCopy(thinking, reply);
+    history.push({ role: 'assistant', content: reply });
+    saveHistory();
+    status.textContent = 'উত্তর এসেছে ✓ — মডেল: ' + (data.model || model);
+  } catch (e) {
+    thinking.textContent = 'ভুল হয়েছে: ' + e.message + '\nসার্ভার চলছে তো? API ঠিকানা ঠিক আছে তো?';
+    thinking.parentElement.parentElement.classList.add('err');
+    status.textContent = 'ভুল: ' + e.message;
+  }
+  btn.disabled = false;
+  scrollChat();
+}
+
+// textarea নিজে থেকে বড় হবে
+document.getElementById('input').addEventListener('input', function () {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 140) + 'px';
+});
+
+// পেজ খুললেই সার্ভার চেক করো + আগের চ্যাট ফিরিয়ে আনো
+loadHistory();
+(async () => {
+  const pill = document.getElementById('status-pill');
+  const pillText = document.getElementById('status-text');
+  const status = document.getElementById('status');
+  try {
+    const rawUrl = document.getElementById('api-url').value.trim();
+    const base = (rawUrl || (window.location.origin.startsWith('http') ? window.location.origin : 'https://e887fab5b73170.app.lhr.life')).replace(/\/$/, '');
+    const res = await fetch(base + '/health');
+    const d = await res.json();
+    pillText.textContent = 'অনলাইন';
+    status.textContent = 'সার্ভার চালু ✓ — কুকি: ' + (d.cookies_configured ? 'আছে' : 'নেই') + ' — মডেল: Argon, Hydrogen, Veo, Imagen';
+    refreshAuthStatus();
+  } catch (e) {
+    pill.classList.add('off');
+    pillText.textContent = 'অফলাইন';
+    status.textContent = 'সার্ভার পাওয়া যাচ্ছে না — আগে gemini_api_server.py চালাও';
+  }
+})();
+</script>
+</body>
+</html>

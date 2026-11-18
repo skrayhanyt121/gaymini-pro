@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naruto Uzumaki | The Legend of the Hidden Leaf</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ninja: {
+                            orange: '#ff6b00',
+                            dark: '#0f172a',
+                            card: '#1e293b',
+                            accent: '#3b82f6',
+                            leaf: '#10b981',
+                            red: '#ef4444'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Rajdhani', 'sans-serif'],
+                        cinzel: ['Cinzel', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-bg {
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+        .glow-orange { text-shadow: 0 0 20px rgba(255, 107, 0, 0.6); }
+        .glow-blue { text-shadow: 0 0 20px rgba(59, 130, 246, 0.6); }
+        .card-glow:hover { box-shadow: 0 0 25px rgba(255, 107, 0, 0.25); }
+    </style>
+</head>
+<body class="bg-ninja-dark text-slate-100 font-sans antialiased selection:bg-ninja-orange selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-ninja-dark/90 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-ninja-orange to-amber-500 flex items-center justify-center shadow-lg shadow-orange-500/30">
+                        <i class="fa-solid fa-khanda text-white text-lg"></i>
+                    </div>
+                    <span class="font-heading font-bold text-2xl tracking-wider bg-gradient-to-r from-ninja-orange via-amber-400 to-ninja-accent bg-clip-text text-transparent">KONOHA LEGACY</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8 font-heading text-lg font-semibold tracking-wide">
+                    <a href="#about" class="hover:text-ninja-orange transition-colors">Overview</a>
+                    <a href="#characters" class="hover:text-ninja-orange transition-colors">Shinobi</a>
+                    <a href="#jutsu" class="hover:text-ninja-orange transition-colors">Jutsu & Power</a>
+                    <a href="#timeline" class="hover:text-ninja-orange transition-colors">Sagas</a>
+                    <a href="#quote" class="hover:text-ninja-orange transition-colors">Philosophy</a>
+                </div>
+                <div>
+                    <a href="#characters" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-ninja-orange to-amber-600 text-white font-heading font-bold tracking-wider hover:opacity-90 transition-all shadow-lg shadow-orange-600/30">
+                        <span>Explore Shinobi</span>
+                        <i class="fa-solid fa-arrow-right text-sm"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg min-h-screen flex items-center justify-center pt-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-t from-ninja-dark via-transparent to-transparent"></div>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 py-24">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-ninja-orange/10 border border-ninja-orange/30 text-ninja-orange font-heading font-semibold text-sm mb-6 uppercase tracking-widest">
+                <i class="fa-solid fa-fire text-xs"></i> The Seventh Hokage's Journey
+            </div>
+            <h1 class="font-cinzel font-extrabold text-5xl sm:text-7xl lg:text-8xl tracking-tight mb-6 uppercase">
+                Believe <span class="text-ninja-orange glow-orange">It!</span>
+            </h1>
+            <p class="max-w-2xl mx-auto text-lg sm:text-xl text-slate-300 font-sans mb-10 leading-relaxed">
+                From a lonely outcast despised by the Hidden Leaf Village to the legendary savior of the shinobi world. Experience the epic saga of Naruto Uzumaki.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#characters" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-ninja-orange hover:bg-orange-600 text-white font-heading font-bold text-lg tracking-wider transition-all shadow-xl shadow-orange-600/40 flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-users"></i> Meet The Shinobi
+                </a>
+                <a href="#timeline" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 font-heading font-bold text-lg tracking-wider transition-all flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-timeline"></i> Explore Sagas
+                </a>
+            </div>
+
+            <!-- Quick Stats Bar -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 p-6 rounded-2xl bg-slate-900/60 backdrop-blur border border-slate-800">
+                <div class="text-center">
+                    <div class="font-heading text-3xl sm:text-4xl font-bold text-ninja-orange">720</div>
+                    <div class="text-xs text-slate-400 font-medium uppercase tracking-wider mt-1">Epic Episodes</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-heading text-3xl sm:text-4xl font-bold text-ninja-accent">7th</div>
+                    <div class="text-xs text-slate-400 font-medium uppercase tracking-wider mt-1">Hokage of Konoha</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-heading text-3xl sm:text-4xl font-bold text-ninja-leaf">1999</div>
+                    <div class="text-xs text-slate-400 font-medium uppercase tracking-wider mt-1">Legacy Began</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-heading text-3xl sm:text-4xl font-bold text-ninja-red">100M+</div>
+                    <div class="text-xs text-slate-400 font-medium uppercase tracking-wider mt-1">Fans Worldwide</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Character Roster Section -->
+    <section id="characters" class="py-28 bg-slate-950 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-ninja-orange font-heading font-semibold text-lg uppercase tracking-widest mb-3">Legendary Warriors</h2>
+                <h3 class="font-cinzel font-bold text-3xl sm:text-5xl uppercase tracking-tight">Icons of the Shinobi World</h3>
+                <p class="text-slate-400 mt-4 text-base sm:text-lg">The heroes, rivals, and mentors who shaped history across generations.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Naruto -->
+                <div class="bg-ninja-card rounded-2xl overflow-hidden border border-slate-800 card-glow transition-all duration-300 group">
+                    <div class="h-64 bg-gradient-to-tr from-amber-600/30 to-orange-500/30 relative overflow-hidden flex items-center justify-center">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-500" style="background-image: url('https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=800&auto=format&fit=crop')"></div>
+                        <div class="absolute bottom-4 left-4 bg-ninja-orange/90 text-white text-xs font-heading font-bold px-3 py-1 rounded-full uppercase tracking-wider">Seventh Hokage</div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-heading font-bold text-2xl mb-1 group-hover:text-ninja-orange transition-colors">Naruto Uzumaki</h4>
+                        <p class="text-slate-400 text-sm mb-4">Jinchūriki of the Nine-Tails, child of prophecy, and hero of the Hidden Leaf.</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-xs text-orange-400 font-mono">Rasengan</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-xs text-orange-400 font-mono">Sage Mode</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-xs text-orange-400 font-mono">Nine-Tails Chakra</span>
+                        </div>
+                        <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
+                            <span>Clan: Uzumaki</span>
+                            <span class="text-ninja-orange font-semibold">Ninja Rank: Hokage</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sasuke -->
+                <div class="bg-ninja-card rounded-2xl overflow-hidden border border-slate-800 card-glow transition-all duration-300 group">
+                    <div class="h-64 bg-gradient-to-tr from-blue-600/30 to-indigo-500/30 relative overflow-hidden flex items-center justify-center">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-500" style="background-image: url('https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=800&auto=format&fit=crop')"></div>
+                        <div class="absolute bottom-4 left-4 bg-blue-600/90 text-white text-xs font-heading font-bold px-3 py-1 rounded-full uppercase tracking-wider">Shadow Hokage</div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-heading font-bold text-2xl mb-1 group-hover:text-ninja-accent transition-colors">Sasuke Uchiha</h4>
+                        <p class="text-slate-400 text-sm mb-4">The last surviving Uchiha of Konoha, wielder of the Eternal Mangekyō Sharingan & Rinnegan.</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-xs text-blue-400 font-mono">Chidori</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-xs text-blue-400 font-mono">Sharingan</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-xs text-blue-400 font-mono">Susanoo</span>
+                        </div>
+                        <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
+                            <span>Clan: Uchiha</span>
+                            <span class="text-ninja-accent font-semibold">Ninja Rank: Rogue / Elite</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kakashi -->
+                <div class="bg-ninja-card rounded-2xl overflow-hidden border border-slate-800 card-glow transition-all duration-300 group">
+                    <div class="h-64 bg-gradient-to-tr from-emerald-600/30 to-teal-500/30 relative overflow-hidden flex items-center justify-center">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-500" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop')"></div>
+                        <div class="absolute bottom-4 left-4 bg-emerald-600/90 text-white text-xs font-heading font-bold px-3 py-1 rounded-full uppercase tracking-wider">Sixth Hokage</div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-heading font-bold text-2xl mb-1 group-hover:text-ninja-leaf transition-colors">Kakashi Hatake</h4>
+                        <p class="text-slate-400 text-sm mb-4">The Copy Ninja who mastered over a thousand jutsu, leader of Team 7.</p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-xs text-emerald-400 font-mono">Lightning Blade</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-xs text-emerald-400 font-mono">Kamui</span>
+                            <span class="px-2.5 py-1 rounded bg-slate-800 text-xs text-emerald-400 font-mono">SharingEye</span>
+                        </div>
+                        <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-400">
+                            <span>Clan: Hatake</span>
+                            <span class="text-ninja-leaf font-semibold">Ninja Rank: Hokage</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Jutsu & Techniques Section -->
+    <section id="jutsu" class="py-28 bg-ninja-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-ninja-accent font-heading font-semibold text-sm mb-4 uppercase tracking-widest">
+                        <i class="fa-solid fa-bolt text-xs"></i> Combat Arts
+                    </div>
+                    <h2 class="font-cinzel font-bold text-3xl sm:text-5xl uppercase tracking-tight mb-6">Legendary Jutsu & Powers</h2>
+                    <p class="text-slate-300 text-base sm:text-lg mb-8 leading-relaxed">
+                        Shinobi harness spiritual and physical energy (Chakra) to perform superhuman techniques ranging from destructive elemental jutsus to mind-bending illusions and space-time ninjutsu.
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center shrink-0 text-ninja-orange text-xl font-bold">
+                                <i class="fa-solid fa-hurricane"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-heading font-bold text-xl text-white">Rasengan</h4>
+                                <p class="text-slate-400 text-sm mt-1">A swirling sphere of chakra formed in the palm of the user's hand, created by Minato Namikaze and perfected by Naruto.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center shrink-0 text-ninja-accent text-xl font-bold">
+                                <i class="fa-solid fa-eye"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-heading font-bold text-xl text-white">Sharingan & Mangekyō</h4>
+                                <p class="text-slate-400 text-sm mt-1">The legendary dōjutsu bloodline limit of the Uchiha clan granting heightened perception, genjutsu mastery, and devastating ocular powers.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shrink-0 text-ninja-leaf text-xl font-bold">
+                                <i class="fa-solid fa-leaf"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-heading font-bold text-xl text-white">Sage Mode (Sennin Mōddo)</h4>
+                                <p class="text-slate-400 text-sm mt-1">An empowered state achieved by blending natural energy with one's own chakra, multiplying physical strength and sensory awareness.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <div class="absolute -inset-1.5 bg-gradient-to-r from-ninja-orange to-ninja-accent rounded-3xl blur opacity-30"></div>
+                    <div class="relative bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-2xl">
+                        <h3 class="font-heading font-bold text-2xl mb-6 text-center text-white">Konoha Shinobi Code</h3>
+                        <ul class="space-y-4 text-slate-300">
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-ninja-orange mt-1.5"></i>
+                                <span><strong>Never Give Up:</strong> The true essence of a ninja is endurance, resilience, and unyielding willpower (Guts).</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-ninja-orange mt-1.5"></i>
+                                <span><strong>Comrades Over Rules:</strong> Those who break the rules are scum, but those who abandon their comrades are worse than scum.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i class="fa-solid fa-circle-check text-ninja-orange mt-1.5"></i>
+                                <span><strong>The Will of Fire:</strong> The belief that love and passion flow through the village like a burning fire, protecting future generations.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline / Sagas Section -->
+    <section id="timeline" class="py-28 bg-slate-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <h2 class="text-ninja-orange font-heading font-semibold text-lg uppercase tracking-widest mb-3">Chronicles of Glory</h2>
+                <h3 class="font-cinzel font-bold text-3xl sm:text-5xl uppercase tracking-tight">The Epic Sagas</h3>
+                <p class="text-slate-400 mt-4 text-base sm:text-lg">From novice genin examinations to the war that saved humanity.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-ninja-card p-6 rounded-2xl border border-slate-800">
+                    <div class="font-heading text-ninja-orange font-bold text-lg mb-2">Stage 01</div>
+                    <h4 class="font-heading font-bold text-xl mb-3 text-white">Land of Waves</h4>
+                    <p class="text-slate-400 text-sm">Team 7's first major mission facing Zabuza Momochi and Haku, forging bonds of brotherhood and ninja resolve.</p>
+                </div>
+
+                <div class="bg-ninja-card p-6 rounded-2xl border border-slate-800">
+                    <div class="font-heading text-ninja-orange font-bold text-lg mb-2">Stage 02</div>
+                    <h4 class="font-heading font-bold text-xl mb-3 text-white">Chūnin Exams & Invasion</h4>
+                    <p class="text-slate-400 text-sm">Elites from across nations gather. Orochimaru's invasion shakes Konoha to its core and introduces the legendary Sannin.</p>
+                </div>
+
+                <div class="bg-ninja-card p-6 rounded-2xl border border-slate-800">
+                    <div class="font-heading text-ninja-orange font-bold text-lg mb-2">Stage 03</div>
+                    <h4 class="font-heading font-bold text-xl mb-3 text-white">Pain's Assault</h4>
+                    <p class="text-slate-400 text-sm">Akatsuki attacks Konoha. Naruto returns in Sage Mode to save the village and achieves true hero status.</p>
+                </div>
+
+                <div class="bg-ninja-card p-6 rounded-2xl border border-slate-800">
+                    <div class="font-heading text-ninja-orange font-bold text-lg mb-2">Stage 04</div>
+                    <h4 class="font-heading font-bold text-xl mb-3 text-white">Fourth Great Ninja War</h4>
+                    <p class="text-slate-400 text-sm">The allied shinobi forces unite against Madara and Kaguya, culminating in Naruto and Sasuke's final fateful duel.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote Section -->
+    <section id="quote" class="py-24 bg-gradient-to-b from-slate-950 to-ninja-dark relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <i class="fa-solid fa-quote-left text-5xl text-ninja-orange/30 mb-6"></i>
+            <blockquote class="font-cinzel text-2xl sm:text-4xl font-bold leading-snug mb-6 text-slate-100">
+                "Hard work is worthless for those that don't believe in themselves."
+            </blockquote>
+            <cite class="font-heading text-ninja-orange text-lg font-semibold uppercase tracking-widest not-italic">— Naruto Uzumaki</cite>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-ninja-dark border-t border-slate-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full bg-ninja-orange flex items-center justify-center text-white">
+                    <i class="fa-solid fa-khanda text-xs"></i>
+                </div>
+                <span class="font-heading font-bold text-xl tracking-wider text-white">KONOHA LEGACY</span>
+            </div>
+            <p class="text-slate-500 text-sm">
+                © 2026 Konoha Legacy / Naruto Fan Tribute. Dattebayo!
+            </p>
+            <div class="flex space-x-6 text-slate-400 text-lg">
+                <a href="#" class="hover:text-ninja-orange transition-colors"><i class="fa-brands fa-discord"></i></a>
+                <a href="#" class="hover:text-ninja-orange transition-colors"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#" class="hover:text-ninja-orange transition-colors"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

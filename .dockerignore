@@ -1,0 +1,12 @@
+.git
+.gitignore
+.cache/
+.local/
+.upm/
+.pythonlibs/
+.vscode/
+attached_assets/
+*.pyc
+__pycache__/
+*.egg-info/
+.env

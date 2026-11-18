@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Claude Code launcher configured for Gemini 4 Hydrogen / Hydroide (Fast Coding)
+if ! curl -s http://127.0.0.1:5000/health >/dev/null 2>&1; then
+    echo "[*] Gemini API Server offline. Auto-starting..."
+    /usr/local/bin/gemini-api start
+    sleep 1.5
+fi
+
+export ANTHROPIC_BASE_URL="http://127.0.0.1:5000"
+export ANTHROPIC_API_KEY="${GAYMINI_API_KEY:-dummy-key-gaymini}"
+export ANTHROPIC_DEFAULT_OPUS_MODEL="gemini-4-argon"
+export ANTHROPIC_DEFAULT_SONNET_MODEL="gemini-4-hydrogen"
+export ANTHROPIC_DEFAULT_HAIKU_MODEL="gemini-4-hydrogen"
+export CLAUDE_CODE_SUBAGENT_MODEL="gemini-4-hydrogen"
+export CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY="1"
+export CLAUDE_CODE_AUTO_MODE_SERVER="0"
+export CLAUDE_CODE_DISABLE_ADVISOR_TOOL="1"
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC="1"
+export DISABLE_AUTOUPDATER="1"
+export DISABLE_FEEDBACK_COMMAND="1"
+export DISABLE_ERROR_REPORTING="1"
+export DISABLE_TELEMETRY="1"
+export CLAUDE_DISABLE_AUTO_UPDATER="1"
+export NODE_OPTIONS="--dns-result-order=ipv4first"
+
+exec /usr/local/bin/claude --model gemini-4-hydrogen "$@"

@@ -1,0 +1,98 @@
+#!/bin/bash
+# Gemini 4 Argon & Hydrogen API Server Service Manager
+PID_FILE="/tmp/gemini_api_server.pid"
+GAYMINI_DIR="${GAYMINI_DIR:-/root/gaymini-claude}"
+LOG_FILE="$GAYMINI_DIR/gemini_api.log"
+SERVER_SCRIPT="$GAYMINI_DIR/gemini_api_server.py"
+export GAYMINI_DIR
+
+stop() {
+    echo "[*] Stopping Gemini API Server..."
+    if [ -f "$PID_FILE" ]; then
+        PID=$(cat "$PID_FILE")
+        kill -9 "$PID" 2>/dev/null
+        rm -f "$PID_FILE"
+    fi
+    pkill -9 -f "gemini_api_server.py" 2>/dev/null || true
+    sleep 1
+    echo "[✓] Server stopped."
+}
+
+start() {
+    # Check if already running and responding
+    if curl -s http://127.0.0.1:5000/health >/dev/null 2>&1; then
+        echo "[!] Gemini API Server is ALREADY running and healthy."
+        echo "[*] Web Dashboard: http://localhost:5000"
+        echo "[*] Live Preview:  http://localhost:5000/preview"
+        return 0
+    fi
+
+    # Clean any stale instance
+    pkill -9 -f "gemini_api_server.py" 2>/dev/null || true
+    rm -f "$PID_FILE"
+    sleep 1
+
+    echo "[*] Starting Gemini 4 Argon & Hydrogen API Server on port 5000..."
+    setsid /usr/bin/python3 -u "$SERVER_SCRIPT" >> "$LOG_FILE" 2>&1 &
+    PID=$!
+    echo $PID > "$PID_FILE"
+    
+    # Wait up to 5 seconds for health endpoint
+    for i in {1..12}; do
+        sleep 0.5
+        if curl -s http://127.0.0.1:5000/health >/dev/null 2>&1; then
+            echo "[✓] Server started successfully! (PID: $PID)"
+            echo "[✓] Web Dashboard: http://localhost:5000"
+            echo "[✓] Live Preview:  http://localhost:5000/preview"
+            echo "[✓] OpenAI Base:   http://localhost:5000/v1"
+            echo "[✓] Anthropic Base: http://localhost:5000"
+            return 0
+        fi
+    done
+
+    echo "[!] Server started (PID: $PID), waiting for first request..."
+}
+
+status() {
+    if curl -s http://127.0.0.1:5000/health >/dev/null 2>&1; then
+        echo "[✓] Gemini API Server is ONLINE and HEALTHY"
+        curl -s http://127.0.0.1:5000/health | python3 -m json.tool 2>/dev/null
+        echo "[*] Local Web UI: http://localhost:5000"
+        echo "[*] Live Preview: http://localhost:5000/preview"
+    else
+        echo "[!] Gemini API Server is OFFLINE"
+    fi
+}
+
+test_api() {
+    echo "[*] Testing Gemini 4 Argon..."
+    curl -s http://127.0.0.1:5000/v1/chat/completions \
+      -H "Content-Type: application/json" \
+      -d '{"model": "gemini-4-argon", "messages": [{"role": "user", "content": "Hi, who are you?"}]}' | python3 -m json.tool
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        sleep 1
+        start
+        ;;
+    status)
+        status
+        ;;
+    logs)
+        tail -n 50 "$LOG_FILE"
+        ;;
+    test)
+        test_api
+        ;;
+    *)
+        echo "Usage: gemini-api {start|stop|restart|status|logs|test}"
+        ;;
+esac

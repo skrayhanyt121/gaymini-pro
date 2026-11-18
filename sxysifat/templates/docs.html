@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gaymini pro – Docs</title>
+  <link rel="icon" type="image/jpeg" href="/sxysifat/banner.jpg"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f4ff;
+      min-height: 100vh;
+      background-image:
+        linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* ── Page wrapper ── */
+    .page { max-width: 480px; margin: 0 auto; padding: 16px 14px 60px; }
+
+    /* ── Back + Title ── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #6366f1;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 12px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .top-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #1e1b4b;
+      letter-spacing: 0.5px;
+      flex: 1;
+    }
+    .top-ver {
+      font-size: 10px;
+      font-weight: 700;
+      background: #e0e7ff;
+      color: #4f46e5;
+      padding: 2px 7px;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .top-sub {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 14px;
+      padding-left: 2px;
+    }
+
+    /* ── Base URL box ── */
+    .base-box {
+      background: #fff;
+      border: 1px solid #e0e7ff;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .base-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #475569;
+    }
+    .base-row i { color: #6366f1; width: 14px; }
+    .base-row code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #4f46e5;
+      background: #e0e7ff;
+      padding: 1px 6px;
+      border-radius: 5px;
+      word-break: break-all;
+    }
+
+    /* ── Terminal ── */
+    .terminal {
+      background: #0f172a;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    }
+    .term-bar {
+      background: #1e293b;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .term-dot {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+    }
+    .term-dot.red    { background: #ff5f57; }
+    .term-dot.yellow { background: #ffbd2e; }
+    .term-dot.green  { background: #28c840; }
+    .term-label {
+      margin-left: 8px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #64748b;
+    }
+    .term-body {
+      padding: 10px 14px;
+      height: 130px;
+      overflow: hidden;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.75;
+    }
+    .term-line { color: #94a3b8; }
+    .term-line.green  { color: #4ade80; }
+    .term-line.blue   { color: #60a5fa; }
+    .term-line.yellow { color: #fbbf24; }
+    .term-line.purple { color: #c084fc; }
+    .term-cursor {
+      display: inline-block;
+      width: 7px; height: 13px;
+      background: #4ade80;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
+
+    /* ── Search ── */
+    .search-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+    .search-wrap i {
+      position: absolute;
+      left: 13px; top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 13px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 14px 10px 36px;
+      border: 1.5px solid #e0e7ff;
+      border-radius: 12px;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      outline: none;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      color: #1e293b;
+      transition: border-color 0.15s;
+    }
+    .search-input::placeholder { color: #cbd5e1; }
+    .search-input:focus { border-color: #6366f1; }
+
+    /* ── Stats row ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .stat-card {
+      background: #fff;
+      border: 1px solid #e0e7ff;
+      border-radius: 12px;
+      padding: 10px 10px 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .stat-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 4px;
+    }
+    .stat-value {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1e1b4b;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: -0.5px;
+    }
+
+    /* ── Folder group cards ── */
+    .group-card {
+      background: #fff;
+      border: 1px solid #e0e7ff;
+      border-radius: 14px;
+      margin-bottom: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      transition: box-shadow 0.15s;
+    }
+    .group-card:hover { box-shadow: 0 3px 12px rgba(99,102,241,0.12); }
+
+    .group-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+    .group-icon {
+      width: 34px; height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #6366f1, #818cf8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .group-icon.purple { background: linear-gradient(135deg, #7c3aed, #a855f7); }
+    .group-icon.blue   { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+    .group-icon.sky    { background: linear-gradient(135deg, #0284c7, #38bdf8); }
+    .group-icon.green  { background: linear-gradient(135deg, #059669, #34d399); }
+    .group-icon.pink   { background: linear-gradient(135deg, #db2777, #f472b6); }
+    .group-icon.orange { background: linear-gradient(135deg, #d97706, #fbbf24); }
+    .group-icon.teal   { background: linear-gradient(135deg, #0d9488, #2dd4bf); }
+    .group-icon.red    { background: linear-gradient(135deg, #dc2626, #f87171); }
+
+    .group-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e293b;
+      font-family: 'JetBrains Mono', monospace;
+      flex: 1;
+    }
+    .group-badge {
+      font-size: 10px;
+      font-weight: 800;
+      background: #e0e7ff;
+      color: #4f46e5;
+      padding: 2px 8px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .group-chevron {
+      color: #94a3b8;
+      font-size: 12px;
+      transition: transform 0.2s;
+    }
+    .group-card.open .group-chevron { transform: rotate(90deg); }
+    .group-card.open .group-header { border-bottom: 1px solid #f1f5f9; }
+
+    /* ── Endpoint list inside group ── */
+    .group-body { display: none; }
+    .group-card.open .group-body { display: block; }
+
+    .ep-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #f1f5f9;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .ep-row:last-child { border-bottom: none; }
+    .ep-row:hover { background: #f8faff; }
+    .ep-row.open { background: #f0f4ff; }
+
+    .method-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 5px;
+      min-width: 36px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .method-badge.post { background: #fef3c7; color: #d97706; }
+    .method-badge.get  { background: #dcfce7; color: #16a34a; }
+
+    .ep-path-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1e293b;
+      flex: 1;
+    }
+    .ep-desc-short {
+      font-size: 11px;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 120px;
+    }
+
+    /* ── Endpoint detail panel ── */
+    .ep-detail {
+      display: none;
+      background: #f8faff;
+      border-top: 1px solid #e0e7ff;
+      padding: 14px;
+    }
+    .ep-detail.show { display: block; }
+
+    .ep-desc-text {
+      font-size: 12.5px;
+      color: #475569;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .ep-desc-text code {
+      background: #e0e7ff;
+      color: #4f46e5;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+
+    /* Tabs */
+    .dtabs {
+      display: flex;
+      gap: 2px;
+      border-bottom: 2px solid #e0e7ff;
+      margin-bottom: 10px;
+      overflow-x: auto;
+    }
+    .dtab-btn {
+      background: none;
+      border: none;
+      padding: 6px 11px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #94a3b8;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      white-space: nowrap;
+      transition: all 0.15s;
+      font-family: 'Inter', sans-serif;
+    }
+    .dtab-btn.active { color: #4f46e5; border-bottom-color: #4f46e5; }
+
+    .dtab-pane { display: none; }
+    .dtab-pane.active { display: block; }
+
+    .dtab-pane pre {
+      background: #0f172a;
+      color: #c4b5fd;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      overflow-x: auto;
+      line-height: 1.7;
+    }
+    .jk { color: #93c5fd; }
+    .js { color: #86efac; }
+    .jb { color: #f9a8d4; }
+    .jn { color: #fbbf24; }
+    .kw { color: #c084fc; }
+    .cm { color: #475569; }
+
+    /* Try it */
+    .try-box {
+      margin-top: 10px;
+      background: #fff;
+      border: 1px solid #e0e7ff;
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .try-lbl {
+      font-size: 10px;
+      font-weight: 800;
+      color: #4f46e5;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .try-input {
+      width: 100%;
+      padding: 8px 11px;
+      border: 1.5px solid #e0e7ff;
+      border-radius: 8px;
+      font-size: 12px;
+      outline: none;
+      font-family: inherit;
+      background: #f8faff;
+      color: #1e293b;
+      margin-bottom: 6px;
+      transition: border-color 0.15s;
+    }
+    .try-input:focus { border-color: #6366f1; }
+    .try-btn {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+      box-shadow: 0 2px 8px rgba(79,70,229,0.3);
+      font-family: 'Inter', sans-serif;
+    }
+    .try-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79,70,229,0.4); }
+    .try-btn.sky { background: linear-gradient(135deg, #0284c7, #38bdf8); box-shadow: 0 2px 8px rgba(2,132,199,0.3); }
+    .result-box {
+      margin-top: 8px;
+      display: none;
+      background: #0f172a;
+      color: #4ade80;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.6;
+    }
+    .result-box.img-result { color: #94a3b8; }
+    .result-box.err { color: #f87171; }
+    .result-box.loading { color: #a78bfa; display: flex; align-items: center; gap: 8px; }
+    .gen-img { width: 100%; border-radius: 6px; margin: 6px 0; display: block; max-height: 260px; object-fit: cover; }
+    .video-time-note {
+      color: #94a3b8;
+      font-size: 9px;
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .demo-video-wrap {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed #e0e7ff;
+    }
+    .demo-video-label, .video-success {
+      color: #0284c7;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .demo-video {
+      width: 100%;
+      display: block;
+      border-radius: 9px;
+      background: #0f172a;
+      aspect-ratio: 16 / 9;
+    }
+    .demo-video-caption {
+      color: #94a3b8;
+      font-size: 10px;
+      line-height: 1.45;
+      margin-top: 7px;
+    }
+    .video-result {
+      background: #0f172a;
+      color: #cbd5e1;
+      padding: 12px;
+    }
+    .video-result .video-success { color: #4ade80; }
+    .generated-video-card + .generated-video-card {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #334155;
+    }
+    .generated-video {
+      width: 100%;
+      display: block;
+      border-radius: 8px;
+      background: #020617;
+      aspect-ratio: 16 / 9;
+    }
+    .video-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .video-links a {
+      color: #93c5fd;
+      font-size: 10px;
+      text-decoration: none;
+    }
+    .video-links a:hover { color: #fff; }
+    .video-response-text {
+      color: #94a3b8;
+      font-size: 10px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      margin-top: 10px;
+    }
+    .music-result {
+      background: #0f172a;
+      color: #cbd5e1;
+      padding: 12px;
+    }
+    .generated-audio {
+      width: 100%;
+      margin: 8px 0;
+    }
+    .music-success {
+      color: #4ade80;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ── Decorative cat character ── */
+    .cat-wrap {
+      text-align: center;
+      padding: 20px 0 10px;
+      pointer-events: none;
+    }
+    .cat-char {
+      font-size: 40px;
+      display: inline-block;
+      animation: cat-float 3s ease-in-out infinite;
+      filter: drop-shadow(0 4px 8px rgba(99,102,241,0.3));
+    }
+    @keyframes cat-float {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50%       { transform: translateY(-10px) rotate(3deg); }
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      text-align: center;
+      font-size: 11px;
+      color: #94a3b8;
+      padding-top: 8px;
+      letter-spacing: 0.3px;
+    }
+    .page-footer a { color: #6366f1; text-decoration: none; font-weight: 700; }
+
+    /* ── File input ── */
+    input[type=file] {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1.5px solid #e0e7ff;
+      border-radius: 8px;
+      font-size: 11px;
+      font-family: inherit;
+      background: #f8faff;
+      margin-bottom: 6px;
+      cursor: pointer;
+    }
+    select {
+      width: 100%;
+      padding: 8px 11px;
+      border: 1.5px solid #e0e7ff;
+      border-radius: 8px;
+      font-size: 12px;
+      font-family: inherit;
+      background: #f8faff;
+      color: #1e293b;
+      margin-bottom: 6px;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <a href="/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    <div>
+      <div class="top-title">Gaymini pro <span class="top-ver">v1.0.0</span></div>
+    </div>
+  </div>
+  <div class="top-sub">Complete API Reference</div>
+
+  <!-- Base URL -->
+  <div class="base-box">
+    <div class="base-row">
+      <i class="fa-solid fa-globe"></i>
+      <span>Base URL: <code id="baseUrl"></code></span>
+    </div>
+    <div class="base-row">
+      <i class="fa-solid fa-code"></i>
+      <span>POST requests: <code>Content-Type: application/json</code></span>
+    </div>
+  </div>
+
+  <!-- Terminal -->
+  <div class="terminal">
+    <div class="term-bar">
+      <span class="term-dot red"></span>
+      <span class="term-dot yellow"></span>
+      <span class="term-dot green"></span>
+      <span class="term-label">gaymini-pro — server log</span>
+    </div>
+    <div class="term-body" id="termBody"></div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-wrap">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input class="search-input" id="searchInput" type="text" placeholder="Search Endpoint..." oninput="filterGroups()"/>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Time</div>
+      <div class="stat-value" id="statTime">--:--:--</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Date</div>
+      <div class="stat-value" id="statDate">---</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Requests</div>
+      <div class="stat-value" id="statReqs">0</div>
+    </div>
+  </div>
+
+  <!-- Endpoint Groups -->
+  <div id="groupsList">
+
+    <!-- gemini -->
+    <div class="group-card" data-search="gemini all-in-one /api/gemini">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <div class="group-icon purple"><i class="fa-solid fa-stars"></i></div>
+        <div class="group-name">gemini</div>
+        <span class="group-badge">1 EP</span>
+        <i class="fa-solid fa-chevron-right group-chevron"></i>
+      </div>
+      <div class="group-body">
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/gemini</span>
+          <span class="ep-desc-short">All-in-One</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text"><strong>One endpoint for everything.</strong> Auto-detects mode from your input — send text for chat, mention image keywords for generation, upload an image for vision or editing.<br><br>
+          <strong>Modes:</strong> <code>auto</code> <code>chat</code> <code>image</code> <code>music</code> <code>video</code> <code>vision</code> <code>edit</code> <code>generate</code> <code>explain</code> <code>debug</code> <code>convert</code> <code>review</code> <code>optimize</code> <code>test</code> <code>document</code> <code>complete</code> <code>ask</code><br>
+          <strong>Extra fields:</strong> <code>language</code> <code>target_language</code> <code>context</code> <code>chat_id</code></p>
+          <div class="dtabs" id="tabs-gemini">
+            <button class="dtab-btn active" onclick="switchDTab('gemini','req',this)">Request</button>
+            <button class="dtab-btn" onclick="switchDTab('gemini','res',this)">Response</button>
+            <button class="dtab-btn" onclick="switchDTab('gemini','curl',this)">cURL</button>
+            <button class="dtab-btn" onclick="switchDTab('gemini','py',this)">Python</button>
+          </div>
+          <div class="dtab-pane active" id="gemini-req"><pre><span class="jb">{</span>
+  <span class="jk">"message"</span>: <span class="js">"Explain quantum computing"</span>,
+  <span class="jk">"mode"</span>: <span class="js">"auto"</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="gemini-res"><pre><span class="jb">{</span>
+  <span class="jk">"text"</span>: <span class="js">"..."</span>,
+  <span class="jk">"images"</span>: <span class="jb">[{ "url": "...", "data_url": "data:image/..." }]</span>,
+  <span class="jk">"chat_id"</span>: <span class="js">"c_abc123..."</span>,
+  <span class="jk">"mode"</span>: <span class="js">"chat"</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="gemini-curl"><pre><span class="cm"># Chat</span>
+curl -X POST BASE_URL/api/gemini \
+  -H <span class="js">"Content-Type: application/json"</span> \
+  -d <span class="js">'{"message": "Tell me a joke"}'</span>
+
+<span class="cm"># Vision (upload image)</span>
+curl -X POST BASE_URL/api/gemini \
+  -F <span class="js">"image=@photo.jpg"</span> \
+  -F <span class="js">"message=What is in this image?"</span></pre></div>
+          <div class="dtab-pane" id="gemini-py"><pre><span class="kw">import</span> requests
+r = requests.post(<span class="js">"BASE_URL/api/gemini"</span>, json={
+    <span class="js">"message"</span>: <span class="js">"Hello!"</span>
+})
+<span class="kw">print</span>(r.json()[<span class="js">"text"</span>], r.json()[<span class="js">"mode"</span>])</pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-play"></i> Try it live</div>
+            <input type="file" id="geminiFile" accept="image/*"/>
+            <input class="try-input" id="geminiMsg" type="text" placeholder='e.g. "draw a dragon" or "what is in this image?"'/>
+            <select id="geminiMode"><option value="auto">auto (smart detect)</option><option value="chat">chat</option><option value="image">image</option><option value="music">music</option><option value="video">video</option><option value="vision">vision</option><option value="generate">generate</option><option value="debug">debug</option><option value="explain">explain</option></select>
+            <button class="try-btn" onclick="tryGemini()"><i class="fa-solid fa-stars"></i> Send</button>
+            <div class="result-box" id="geminiResult"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- chat -->
+    <div class="group-card" data-search="chat history stream /api/chat">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <div class="group-icon blue"><i class="fa-solid fa-comment"></i></div>
+        <div class="group-name">chat</div>
+        <span class="group-badge">3 EPs</span>
+        <i class="fa-solid fa-chevron-right group-chevron"></i>
+      </div>
+      <div class="group-body">
+        <!-- /api/chat -->
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/chat</span>
+          <span class="ep-desc-short">Text Generation</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Send a message through the chat mode system. Set <code>mode</code> to <code>chat</code>, <code>auto</code>, <code>image</code>, <code>video</code>, or <code>music</code>; media responses include playable URLs.</p>
+          <div class="dtabs" id="tabs-chat">
+            <button class="dtab-btn active" onclick="switchDTab('chat','req',this)">Request</button>
+            <button class="dtab-btn" onclick="switchDTab('chat','res',this)">Response</button>
+            <button class="dtab-btn" onclick="switchDTab('chat','curl',this)">cURL</button>
+          </div>
+          <div class="dtab-pane active" id="chat-req"><pre><span class="jb">{</span>
+  <span class="jk">"message"</span>: <span class="js">"What is the capital of Bangladesh?"</span>,
+  <span class="jk">"model"</span>: <span class="js">"unspecified"</span>,
+  <span class="jk">"mode"</span>: <span class="js">"chat"</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="chat-res"><pre><span class="jb">{</span>
+  <span class="jk">"text"</span>: <span class="js">"The capital of Bangladesh is Dhaka."</span>,
+  <span class="jk">"images"</span>: <span class="jb">[]</span>,
+  <span class="jk">"media"</span>: <span class="jb">[]</span>,
+  <span class="jk">"mode"</span>: <span class="js">"chat"</span>,
+  <span class="jk">"chat_id"</span>: <span class="js">"c_abc123..."</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="chat-curl"><pre>curl -X POST BASE_URL/api/chat \
+  -H <span class="js">"Content-Type: application/json"</span> \
+  -d <span class="js">'{"message": "Create an anime rock track", "mode": "music"}'</span></pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-play"></i> Try it live</div>
+            <input class="try-input" id="chatMsg" type="text" placeholder="Type your message..."/>
+            <select id="chatMode" aria-label="Chat mode">
+              <option value="chat">Chat</option>
+              <option value="auto">Auto detect</option>
+              <option value="image">Image</option>
+              <option value="video">Video</option>
+              <option value="music">Music</option>
+            </select>
+            <button class="try-btn" onclick="tryChat()"><i class="fa-solid fa-paper-plane"></i> Send</button>
+            <div class="result-box" id="chatResult"></div>
+          </div>
+        </div>
+
+        <!-- /api/chat/history -->
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/chat/history</span>
+          <span class="ep-desc-short">Multi-turn</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Continue a conversation. Pass <code>chat_id</code> from the previous response to maintain context.</p>
+          <div class="dtabs" id="tabs-history">
+            <button class="dtab-btn active" onclick="switchDTab('history','req',this)">Request</button>
+            <button class="dtab-btn" onclick="switchDTab('history','res',this)">Response</button>
+          </div>
+          <div class="dtab-pane active" id="history-req"><pre><span class="jb">{</span>
+  <span class="jk">"message"</span>: <span class="js">"What did I just ask?"</span>,
+  <span class="jk">"chat_id"</span>: <span class="js">"c_abc123..."</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="history-res"><pre><span class="jb">{</span>
+  <span class="jk">"text"</span>: <span class="js">"You asked about Bangladesh's capital."</span>,
+  <span class="jk">"chat_id"</span>: <span class="js">"c_abc123..."</span>
+<span class="jb">}</span></pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-play"></i> Try it live</div>
+            <input class="try-input" id="histMsg" type="text" placeholder="Type a message..."/>
+            <input class="try-input" id="histChatId" type="text" placeholder="chat_id (leave empty to start new)" style="font-size:11px;color:#888"/>
+            <button class="try-btn" onclick="tryHistory()"><i class="fa-solid fa-paper-plane"></i> Send</button>
+            <div class="result-box" id="histResult"></div>
+          </div>
+        </div>
+
+        <!-- /api/chat/stream -->
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge get">GET</span>
+          <span class="ep-path-text">/api/chat/stream</span>
+          <span class="ep-desc-short">SSE Streaming</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Real-time streaming via <strong>Server-Sent Events</strong>. Response arrives token-by-token.<br><strong>Query params:</strong> <code>message</code> <code>model</code> <code>chat_id</code></p>
+          <div class="dtabs" id="tabs-stream">
+            <button class="dtab-btn active" onclick="switchDTab('stream','events',this)">Events</button>
+            <button class="dtab-btn" onclick="switchDTab('stream','js',this)">JavaScript</button>
+          </div>
+          <div class="dtab-pane active" id="stream-events"><pre><span class="cm">// Keep-alive</span>
+data: <span class="jb">{</span><span class="jk">"type"</span>: <span class="js">"ping"</span><span class="jb">}</span>
+<span class="cm">// Text chunk</span>
+data: <span class="jb">{</span><span class="jk">"type"</span>: <span class="js">"chunk"</span>, <span class="jk">"text"</span>: <span class="js">"Hello"</span><span class="jb">}</span>
+<span class="cm">// Done</span>
+data: <span class="jb">{</span><span class="jk">"type"</span>: <span class="js">"done"</span>, <span class="jk">"chat_id"</span>: <span class="js">"c_abc123..."</span><span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="stream-js"><pre><span class="kw">const</span> es = <span class="kw">new</span> EventSource(
+  <span class="js">`BASE_URL/api/chat/stream?message=Hello`</span>
+);
+es.onmessage = e => {
+  <span class="kw">const</span> d = JSON.parse(e.data);
+  <span class="kw">if</span> (d.type === <span class="js">"chunk"</span>) process.stdout.write(d.text);
+  <span class="kw">if</span> (d.type === <span class="js">"done"</span>) es.close();
+};</pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-bolt"></i> Try it live <span style="color:#818cf8;font-size:9px;font-weight:400">(real-time)</span></div>
+            <input class="try-input" id="streamMsg" type="text" placeholder="Type a message..."/>
+            <button class="try-btn" onclick="tryStream()" id="streamBtn"><i class="fa-solid fa-satellite-dish"></i> Stream</button>
+            <div class="result-box" id="streamResult" style="white-space:pre-wrap"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- translate -->
+    <div class="group-card" data-search="translate language /api/translate">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <div class="group-icon teal"><i class="fa-solid fa-language"></i></div>
+        <div class="group-name">translate</div>
+        <span class="group-badge">1 EP</span>
+        <i class="fa-solid fa-chevron-right group-chevron"></i>
+      </div>
+      <div class="group-body">
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/translate</span>
+          <span class="ep-desc-short">Translate text</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Translate text to any language. Supports formal/informal tones.</p>
+          <div class="dtabs" id="tabs-tr">
+            <button class="dtab-btn active" onclick="switchDTab('tr','req',this)">Request</button>
+            <button class="dtab-btn" onclick="switchDTab('tr','res',this)">Response</button>
+          </div>
+          <div class="dtab-pane active" id="tr-req"><pre><span class="jb">{</span>
+  <span class="jk">"text"</span>: <span class="js">"Hello, how are you?"</span>,
+  <span class="jk">"target_language"</span>: <span class="js">"Bengali"</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="tr-res"><pre><span class="jb">{</span>
+  <span class="jk">"translation"</span>: <span class="js">"হ্যালো, আপনি কেমন আছেন?"</span>,
+  <span class="jk">"target_language"</span>: <span class="js">"Bengali"</span>
+<span class="jb">}</span></pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-play"></i> Try it live</div>
+            <input class="try-input" id="trText" type="text" placeholder="Text to translate..."/>
+            <input class="try-input" id="trLang" type="text" placeholder="Target language (e.g. Bengali, Japanese)"/>
+            <button class="try-btn" onclick="tryTranslate()"><i class="fa-solid fa-language"></i> Translate</button>
+            <div class="result-box" id="trResult"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- summarize -->
+    <div class="group-card" data-search="summarize summary /api/summarize">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <div class="group-icon orange"><i class="fa-solid fa-align-left"></i></div>
+        <div class="group-name">summarize</div>
+        <span class="group-badge">1 EP</span>
+        <i class="fa-solid fa-chevron-right group-chevron"></i>
+      </div>
+      <div class="group-body">
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/summarize</span>
+          <span class="ep-desc-short">Summarize text</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Summarize long text. <code>format</code>: <code>paragraph</code> / <code>bullets</code> / <code>keypoints</code>. <code>length</code>: <code>short</code> / <code>medium</code> / <code>long</code>.</p>
+          <div class="dtabs" id="tabs-sum">
+            <button class="dtab-btn active" onclick="switchDTab('sum','req',this)">Request</button>
+            <button class="dtab-btn" onclick="switchDTab('sum','res',this)">Response</button>
+          </div>
+          <div class="dtab-pane active" id="sum-req"><pre><span class="jb">{</span>
+  <span class="jk">"text"</span>: <span class="js">"Long article text here..."</span>,
+  <span class="jk">"format"</span>: <span class="js">"bullets"</span>,
+  <span class="jk">"length"</span>: <span class="js">"short"</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="sum-res"><pre><span class="jb">{</span> <span class="jk">"summary"</span>: <span class="js">"• Point 1\n• Point 2..."</span> <span class="jb">}</span></pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-play"></i> Try it live</div>
+            <textarea class="try-input" id="sumText" rows="3" placeholder="Paste text to summarize..."></textarea>
+            <div style="display:flex;gap:6px;margin-top:6px">
+              <select id="sumFormat"><option value="paragraph">paragraph</option><option value="bullets" selected>bullets</option><option value="tldr">tldr</option></select>
+              <select id="sumLength"><option value="brief">brief</option><option value="medium" selected>medium</option><option value="detailed">detailed</option></select>
+            </div>
+            <button class="try-btn" onclick="trySummarize()"><i class="fa-solid fa-play"></i> Summarize</button>
+            <div class="result-box" id="sumResult"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- rewrite -->
+    <div class="group-card" data-search="rewrite tone rephrase /api/rewrite">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <div class="group-icon pink"><i class="fa-solid fa-pen-nib"></i></div>
+        <div class="group-name">rewrite</div>
+        <span class="group-badge">1 EP</span>
+        <i class="fa-solid fa-chevron-right group-chevron"></i>
+      </div>
+      <div class="group-body">
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/rewrite</span>
+          <span class="ep-desc-short">Rephrase text</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Rewrite text in a different tone. <code>tone</code>: <code>formal</code> <code>casual</code> <code>professional</code> <code>poetic</code> <code>humorous</code> <code>simple</code> etc.</p>
+          <div class="dtabs" id="tabs-rw">
+            <button class="dtab-btn active" onclick="switchDTab('rw','req',this)">Request</button>
+            <button class="dtab-btn" onclick="switchDTab('rw','res',this)">Response</button>
+          </div>
+          <div class="dtab-pane active" id="rw-req"><pre><span class="jb">{</span>
+  <span class="jk">"text"</span>: <span class="js">"Hey wanna hang out tmrw?"</span>,
+  <span class="jk">"tone"</span>: <span class="js">"formal"</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="rw-res"><pre><span class="jb">{</span> <span class="jk">"rewritten"</span>: <span class="js">"Would you be available to meet tomorrow?"</span> <span class="jb">}</span></pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-play"></i> Try it live</div>
+            <textarea class="try-input" id="rwText" rows="3" placeholder="Enter text to rewrite..."></textarea>
+            <select id="rwTone" style="margin-top:6px"><option value="formal">formal</option><option value="casual">casual</option><option value="professional">professional</option><option value="friendly">friendly</option><option value="poetic">poetic</option><option value="humorous">humorous</option><option value="simple">simple</option></select>
+            <button class="try-btn" onclick="tryRewrite()"><i class="fa-solid fa-play"></i> Rewrite</button>
+            <div class="result-box" id="rwResult"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- code -->
+    <div class="group-card" data-search="code generate debug explain convert /api/code">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <div class="group-icon"><i class="fa-solid fa-code"></i></div>
+        <div class="group-name">code</div>
+        <span class="group-badge">1 EP</span>
+        <i class="fa-solid fa-chevron-right group-chevron"></i>
+      </div>
+      <div class="group-body">
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/code</span>
+          <span class="ep-desc-short">Code assistant</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">AI code assistant with model selection and conversation support. <code>mode</code>: <code>generate</code> <code>explain</code> <code>debug</code> <code>convert</code> <code>review</code> <code>optimize</code> <code>test</code> <code>document</code> <code>complete</code> <code>ask</code><br><code>language</code>: source or target language. <code>target_language</code>: for convert mode. <code>model</code>: optional Gemini model.</p>
+          <div class="dtabs" id="tabs-code">
+            <button class="dtab-btn active" onclick="switchDTab('code','req',this)">Request</button>
+            <button class="dtab-btn" onclick="switchDTab('code','res',this)">Response</button>
+            <button class="dtab-btn" onclick="switchDTab('code','curl',this)">cURL</button>
+          </div>
+          <div class="dtab-pane active" id="code-req"><pre><span class="jb">{</span>
+  <span class="jk">"task"</span>: <span class="js">"def add(a,b): return a-b"</span>,
+  <span class="jk">"mode"</span>: <span class="js">"debug"</span>,
+  <span class="jk">"language"</span>: <span class="js">"Python"</span>,
+  <span class="jk">"model"</span>: <span class="js">"gemini-3-flash"</span>,
+  <span class="jk">"context"</span>: <span class="js">"Python 3.11"</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="code-res"><pre><span class="jb">{</span>
+  <span class="jk">"result"</span>: <span class="js">"```python\ndef add(a,b): return a+b\n```"</span>,
+  <span class="jk">"mode"</span>: <span class="js">"debug"</span>,
+  <span class="jk">"language"</span>: <span class="js">"Python"</span>,
+  <span class="jk">"chat_id"</span>: <span class="js">"..."</span>,
+  <span class="jk">"model"</span>: <span class="js">"gemini-3-flash"</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="code-curl"><pre>curl -X POST BASE_URL/api/code \
+  -H <span class="js">"Content-Type: application/json"</span> \
+  -d <span class="js">'{"task":"sort a list","mode":"generate","language":"Python","model":"gemini-3-flash"}'</span></pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-play"></i> Try it live</div>
+            <textarea class="try-input" id="codeTask" rows="4" placeholder="Describe a coding task or paste code..."></textarea>
+            <select id="codeMode"><option value="generate">generate</option><option value="explain">explain</option><option value="debug">debug</option><option value="convert">convert</option><option value="review">review</option><option value="optimize">optimize</option><option value="test">test</option><option value="document">document</option><option value="complete">complete</option><option value="ask">ask</option></select>
+            <select id="codeLanguage" aria-label="Code language"><option>Python</option><option>JavaScript</option><option>TypeScript</option><option>Java</option><option>C++</option><option>Go</option><option>Rust</option><option>PHP</option><option>SQL</option><option>HTML</option></select>
+            <select id="codeTargetLanguage" aria-label="Convert target language"><option>JavaScript</option><option>TypeScript</option><option>Python</option><option>Java</option><option>C++</option><option>Go</option><option>Rust</option><option>PHP</option></select>
+            <textarea class="try-input" id="codeContext" rows="2" placeholder="Optional context or framework"></textarea>
+            <select id="codeModel" aria-label="Code model">
+              <option value="unspecified">Default model</option>
+              <option value="gemini-3-flash">Gemini Flash</option>
+              <option value="gemini-3-pro">Gemini Pro</option>
+            </select>
+            <button class="try-btn" onclick="tryCode()"><i class="fa-solid fa-play"></i> Run</button>
+            <div class="result-box" id="codeResult"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- image -->
+    <div class="group-card" data-search="image generate edit style /api/image">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <div class="group-icon purple"><i class="fa-solid fa-image"></i></div>
+        <div class="group-name">image</div>
+        <span class="group-badge">3 EPs</span>
+        <i class="fa-solid fa-chevron-right group-chevron"></i>
+      </div>
+      <div class="group-body">
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/image</span>
+          <span class="ep-desc-short">Generate image</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Generate images from a text prompt using Gemini. Choose a model with the optional <code>model</code> field.</p>
+          <div class="dtabs" id="tabs-img">
+            <button class="dtab-btn active" onclick="switchDTab('img','req',this)">Request</button>
+            <button class="dtab-btn" onclick="switchDTab('img','res',this)">Response</button>
+          </div>
+          <div class="dtab-pane active" id="img-req"><pre><span class="jb">{</span>
+  <span class="jk">"prompt"</span>: <span class="js">"A dragon in a cyberpunk city at night"</span>,
+  <span class="jk">"model"</span>: <span class="js">"gemini-3-flash"</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="img-res"><pre><span class="jb">{</span>
+  <span class="jk">"images"</span>: <span class="jb">[{ "url": "...", "data_url": "data:image/..." }]</span>,
+  <span class="jk">"mode"</span>: <span class="js">"image"</span>,
+  <span class="jk">"model"</span>: <span class="js">"gemini-3-flash"</span>,
+  <span class="jk">"chat_id"</span>: <span class="js">"..."</span>
+<span class="jb">}</span></pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-play"></i> Try it live</div>
+            <textarea class="try-input" id="imgPrompt" rows="3" placeholder="Describe the image..."></textarea>
+            <select id="imgModel" aria-label="Image model">
+              <option value="unspecified">Default model</option>
+              <option value="gemini-3-flash">Gemini Flash</option>
+              <option value="gemini-3-pro">Gemini Pro</option>
+            </select>
+            <button class="try-btn" onclick="tryImage()"><i class="fa-solid fa-image"></i> Generate</button>
+            <div class="result-box img-result" id="imgResult"></div>
+          </div>
+        </div>
+
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/image/edit</span>
+          <span class="ep-desc-short">Edit image</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Edit an image using natural language instructions and select a model. Upload via <code>multipart/form-data</code>; model defaults to Gemini Flash.</p>
+          <div class="dtabs" id="tabs-imgedit">
+            <button class="dtab-btn active" onclick="switchDTab('imgedit','curl',this)">cURL</button>
+            <button class="dtab-btn" onclick="switchDTab('imgedit','res',this)">Response</button>
+          </div>
+          <div class="dtab-pane active" id="imgedit-curl"><pre>curl -X POST BASE_URL/api/image/edit \
+  -F <span class="js">"image=@photo.jpg"</span> \
+  -F <span class="js">"prompt=Make background white"</span> \
+  -F <span class="js">"model=gemini-3-flash"</span></pre></div>
+          <div class="dtab-pane" id="imgedit-res"><pre><span class="jb">{</span>
+  <span class="jk">"images"</span>: <span class="jb">[{ "url": "...", "data_url": "..." }]</span>,
+  <span class="jk">"mode"</span>: <span class="js">"edit"</span>,
+  <span class="jk">"model"</span>: <span class="js">"gemini-3-flash"</span>,
+  <span class="jk">"chat_id"</span>: <span class="js">"..."</span>
+<span class="jb">}</span></pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-play"></i> Try it live</div>
+            <label style="font-size:11px;color:#64748b;margin-bottom:4px;display:block">Upload image</label>
+            <input type="file" id="imgeditFile" accept="image/*" class="try-input" style="padding:6px"/>
+            <input class="try-input" id="imgeditInstruction" type="text" placeholder="Instruction: Make background white..." style="margin-top:6px"/>
+            <select id="imgeditModel" aria-label="Image edit model">
+              <option value="gemini-3-flash" selected>Gemini Flash (default)</option>
+              <option value="unspecified">Default model</option>
+              <option value="gemini-3-pro">Gemini Pro</option>
+            </select>
+            <button class="try-btn" onclick="tryImageEdit()"><i class="fa-solid fa-wand-magic-sparkles"></i> Edit</button>
+            <div class="result-box img-result" id="imgeditResult"></div>
+          </div>
+        </div>
+
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/image/style</span>
+          <span class="ep-desc-short">Style transfer</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Convert image to an art style. <code>style</code>: <code>anime</code> <code>watercolor</code> <code>oil_painting</code> <code>sketch</code> <code>pixel_art</code> <code>cyberpunk</code> <code>studio_ghibli</code></p>
+          <div class="dtabs" id="tabs-imgstyle">
+            <button class="dtab-btn active" onclick="switchDTab('imgstyle','curl',this)">cURL</button>
+          </div>
+          <div class="dtab-pane active" id="imgstyle-curl"><pre>curl -X POST BASE_URL/api/image/style \
+  -F <span class="js">"image=@photo.jpg"</span> \
+  -F <span class="js">"style=anime"</span></pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-play"></i> Try it live</div>
+            <label style="font-size:11px;color:#64748b;margin-bottom:4px;display:block">Upload image</label>
+            <input type="file" id="imgstyleFile" accept="image/*" class="try-input" style="padding:6px"/>
+            <select id="imgstyleStyle" style="margin-top:6px"><option value="anime">anime</option><option value="watercolor">watercolor</option><option value="oil_painting">oil painting</option><option value="sketch">sketch</option><option value="pixel_art">pixel art</option><option value="cyberpunk">cyberpunk</option><option value="studio_ghibli">studio ghibli</option><option value="cartoon">cartoon</option><option value="dark_fantasy">dark fantasy</option></select>
+            <select id="imgstyleModel" aria-label="Style transfer model">
+              <option value="gemini-3-flash" selected>Gemini Flash (default)</option>
+              <option value="unspecified">Default model</option>
+              <option value="gemini-3-pro">Gemini Pro</option>
+            </select>
+            <button class="try-btn" onclick="tryImageStyle()"><i class="fa-solid fa-palette"></i> Style</button>
+            <div class="result-box img-result" id="imgstyleResult"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- video -->
+    <div class="group-card" id="video" data-search="video generation veo /api/video">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <div class="group-icon purple"><i class="fa-solid fa-film"></i></div>
+        <div class="group-name">video</div>
+        <span class="group-badge">2 EPs</span>
+        <i class="fa-solid fa-chevron-right group-chevron"></i>
+      </div>
+      <div class="group-body">
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/video</span>
+          <span class="ep-desc-short">Generate video</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Generate a video from a text prompt, or animate an uploaded image according to a prompt, using the bundled Gemini client. Gemini must return a generated video for the current account and model. The response contains a Gemini-hosted video URL and thumbnail. Generation may take several minutes; allow up to 8 minutes for the request.</p>
+          <div class="dtabs" id="tabs-video">
+            <button class="dtab-btn active" onclick="switchDTab('video','curl',this)">cURL</button>
+            <button class="dtab-btn" onclick="switchDTab('video','req',this)">Request</button>
+            <button class="dtab-btn" onclick="switchDTab('video','res',this)">Response</button>
+          </div>
+          <div class="dtab-pane active" id="video-curl"><pre># Prompt only
+curl -X POST BASE_URL/api/video \
+  -H <span class="js">"Content-Type: application/json"</span> \
+  -d <span class="js">'{"prompt":"A cinematic aerial shot over a misty mountain lake at sunrise"}'</span>
+
+# Image + prompt (image-to-video)
+curl -X POST BASE_URL/api/video \
+  -F <span class="js">"image=@photo.jpg"</span> \
+  -F <span class="js">"prompt=Make the person wave and slowly zoom in"</span></pre></div>
+          <div class="dtab-pane" id="video-req"><pre><span class="jb">{</span>
+  <span class="jk">"prompt"</span>: <span class="js">"A cinematic aerial shot over a misty mountain lake at sunrise"</span>,
+  <span class="jk">"model"</span>: <span class="js">"unspecified"</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="video-res"><pre><span class="jb">{</span>
+  <span class="jk">"videos"</span>: <span class="jb">[{ "url": "...", "thumbnail": "...", "type": "GeneratedVideo" }]</span>,
+  <span class="jk">"text"</span>: <span class="js">"..."</span>,
+  <span class="jk">"chat_id"</span>: <span class="js">"..."</span>,
+  <span class="jk">"mode"</span>: <span class="js">"video"</span>
+<span class="jb">}</span></pre></div>
+          <p class="ep-desc-text">Alias: <code>POST /api/video/generate</code>. The all-in-one endpoint also accepts <code>"mode": "video"</code>. Upload an image with the <code>image</code> field to animate that image according to the prompt.</p>
+          <div class="try-box video-try-box">
+            <div class="try-lbl"><i class="fa-solid fa-film"></i> Try it live <span class="video-time-note">generation can take up to 8 minutes</span></div>
+            <label style="font-size:11px;color:#64748b;margin-bottom:4px;display:block">Optional image for image-to-video</label>
+            <input type="file" id="videoImage" accept="image/*" class="try-input" style="padding:6px"/>
+            <textarea class="try-input" id="videoPrompt" rows="3" placeholder="A cinematic sunrise over a misty mountain lake..."></textarea>
+            <select id="videoModel" aria-label="Video model">
+              <option value="unspecified">Default model</option>
+              <option value="gemini-3-flash">Gemini Flash</option>
+              <option value="gemini-3-pro">Gemini Pro</option>
+            </select>
+            <button class="try-btn sky" id="videoBtn" onclick="tryVideo()"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate video</button>
+            <div class="result-box" id="videoResult"></div>
+            <div class="demo-video-wrap">
+              <div class="demo-video-label"><i class="fa-solid fa-circle-play"></i> Local UI preview</div>
+              <video class="demo-video" controls preload="metadata" poster="/sxysifat/banner.jpg">
+                <source src="/sxysifat/demo-video.mp4" type="video/mp4"/>
+                Your browser does not support video playback.
+              </video>
+              <p class="demo-video-caption">This sample demonstrates the player only; Gemini-generated clips still depend on account access and quota.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/video/generate</span>
+          <span class="ep-desc-short">Generate video (alias)</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Alias for <code>POST /api/video</code>. Send the same JSON request body.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- music -->
+    <div class="group-card" id="music" data-search="music audio song soundtrack /api/music">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <div class="group-icon sky"><i class="fa-solid fa-music"></i></div>
+        <div class="group-name">music</div>
+        <span class="group-badge">2 EPs</span>
+        <i class="fa-solid fa-chevron-right group-chevron"></i>
+      </div>
+      <div class="group-body">
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/music</span>
+          <span class="ep-desc-short">Generate music</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Generate an original music or audio track from a text prompt. Gemini must return generated media for the current account and model. Generation may take several minutes.</p>
+          <div class="dtabs" id="tabs-music">
+            <button class="dtab-btn active" onclick="switchDTab('music','curl',this)">cURL</button>
+            <button class="dtab-btn" onclick="switchDTab('music','req',this)">Request</button>
+            <button class="dtab-btn" onclick="switchDTab('music','res',this)">Response</button>
+          </div>
+          <div class="dtab-pane active" id="music-curl"><pre>curl -X POST BASE_URL/api/music \
+  -H <span class="js">"Content-Type: application/json"</span> \
+  -d <span class="js">'{"prompt":"An energetic anime rock anthem with taiko drums and passionate vocals"}'</span></pre></div>
+          <div class="dtab-pane" id="music-req"><pre><span class="jb">{</span>
+  <span class="jk">"prompt"</span>: <span class="js">"An energetic anime rock anthem with taiko drums"</span>,
+  <span class="jk">"model"</span>: <span class="js">"unspecified"</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="music-res"><pre><span class="jb">{</span>
+  <span class="jk">"media"</span>: <span class="jb">[{ "audio_url": "...", "audio_proxy_url": "...", "title": "[Music]" }]</span>,
+  <span class="jk">"text"</span>: <span class="js">"..."</span>,
+  <span class="jk">"mode"</span>: <span class="js">"music"</span>
+<span class="jb">}</span></pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-music"></i> Try it live</div>
+            <textarea class="try-input" id="musicPrompt" rows="3" placeholder="An atmospheric lo-fi track with rain, piano, and soft vinyl crackle..."></textarea>
+            <select id="musicModel" aria-label="Music model">
+              <option value="unspecified">Default model</option>
+              <option value="gemini-3-flash">Gemini Flash</option>
+              <option value="gemini-3-pro">Gemini Pro</option>
+            </select>
+            <button class="try-btn sky" id="musicBtn" onclick="tryMusic()"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate music</button>
+            <div class="result-box" id="musicResult"></div>
+          </div>
+        </div>
+
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/music/generate</span>
+          <span class="ep-desc-short">Generate music (alias)</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Alias for <code>POST /api/music</code>. Send the same JSON request body.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- vision -->
+    <div class="group-card" data-search="vision analyze image question /api/vision">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <div class="group-icon sky"><i class="fa-solid fa-eye"></i></div>
+        <div class="group-name">vision</div>
+        <span class="group-badge">1 EP</span>
+        <i class="fa-solid fa-chevron-right group-chevron"></i>
+      </div>
+      <div class="group-body">
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/vision</span>
+          <span class="ep-desc-short">Image Q&A</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Ask any question about an image. Upload via <code>multipart/form-data</code>.</p>
+          <div class="dtabs" id="tabs-vision">
+            <button class="dtab-btn active" onclick="switchDTab('vision','curl',this)">cURL</button>
+            <button class="dtab-btn" onclick="switchDTab('vision','res',this)">Response</button>
+          </div>
+          <div class="dtab-pane active" id="vision-curl"><pre>curl -X POST BASE_URL/api/vision \
+  -F <span class="js">"image=@photo.jpg"</span> \
+  -F <span class="js">"question=What is in this image?"</span></pre></div>
+          <div class="dtab-pane" id="vision-res"><pre><span class="jb">{</span>
+  <span class="jk">"answer"</span>: <span class="js">"The image shows a cat sitting on a windowsill..."</span>,
+  <span class="jk">"chat_id"</span>: <span class="js">"c_abc123..."</span>
+<span class="jb">}</span></pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-play"></i> Try it live</div>
+            <input type="file" id="visionFile" accept="image/*"/>
+            <input class="try-input" id="visionQ" type="text" placeholder="What do you want to know about this image?"/>
+            <button class="try-btn sky" onclick="tryVision()"><i class="fa-solid fa-eye"></i> Analyze</button>
+            <div class="result-box" id="visionResult"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- deep-research -->
+    <div class="group-card" data-search="deep research /api/deep-research">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <div class="group-icon sky"><i class="fa-solid fa-flask"></i></div>
+        <div class="group-name">deep-research</div>
+        <span class="group-badge">1 EP</span>
+        <i class="fa-solid fa-chevron-right group-chevron"></i>
+      </div>
+      <div class="group-body">
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge post">POST</span>
+          <span class="ep-path-text">/api/deep-research</span>
+          <span class="ep-desc-short">Full research report</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text"><strong>Gemini Deep Research.</strong> Multi-step research cycle — generates a plan, executes it, returns a full structured report. Takes 1–5 minutes.<br><code>topic</code>: required. <code>max_polls</code>: default 20. <code>poll_interval</code>: seconds (default 15).</p>
+          <div class="dtabs" id="tabs-dr">
+            <button class="dtab-btn active" onclick="switchDTab('dr','req',this)">Request</button>
+            <button class="dtab-btn" onclick="switchDTab('dr','res',this)">Response</button>
+            <button class="dtab-btn" onclick="switchDTab('dr','curl',this)">cURL</button>
+          </div>
+          <div class="dtab-pane active" id="dr-req"><pre><span class="jb">{</span>
+  <span class="jk">"topic"</span>: <span class="js">"Impact of AI on healthcare in 2025"</span>,
+  <span class="jk">"max_polls"</span>: <span class="jn">20</span>,
+  <span class="jk">"poll_interval"</span>: <span class="jn">15</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="dr-res"><pre><span class="jb">{</span>
+  <span class="jk">"topic"</span>: <span class="js">"..."</span>,
+  <span class="jk">"report"</span>: <span class="js">"## Report\n\n..."</span>,
+  <span class="jk">"plan"</span>: <span class="js">"..."</span>,
+  <span class="jk">"polls"</span>: <span class="jn">8</span>
+<span class="jb">}</span></pre></div>
+          <div class="dtab-pane" id="dr-curl"><pre>curl -X POST BASE_URL/api/deep-research \
+  -H <span class="js">"Content-Type: application/json"</span> \
+  -d <span class="js">'{"topic": "Future of renewable energy"}'</span> \
+  --max-time <span class="jn">300</span></pre></div>
+          <div class="try-box">
+            <div class="try-lbl"><i class="fa-solid fa-flask"></i> Try it live <span style="color:#f87171;font-size:9px;font-weight:400">(1–5 min)</span></div>
+            <input class="try-input" id="drTopic" type="text" placeholder='e.g. "Impact of AI on healthcare"'/>
+            <button class="try-btn sky" id="drBtn" onclick="tryDeepResearch()"><i class="fa-solid fa-flask"></i> Research</button>
+            <div class="result-box" id="drResult"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- models -->
+    <div class="group-card" data-search="models list /api/models">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <div class="group-icon green"><i class="fa-solid fa-layer-group"></i></div>
+        <div class="group-name">models</div>
+        <span class="group-badge">1 EP</span>
+        <i class="fa-solid fa-chevron-right group-chevron"></i>
+      </div>
+      <div class="group-body">
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge get">GET</span>
+          <span class="ep-path-text">/api/models</span>
+          <span class="ep-desc-short">List models</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Returns all available Gemini models.</p>
+          <pre style="background:#0f172a;color:#c4b5fd;border-radius:10px;padding:12px;font-size:11px;font-family:'JetBrains Mono',monospace;"><span class="jb">{</span>
+  <span class="jk">"models"</span>: <span class="jb">[</span>
+    <span class="jb">{</span> <span class="jk">"name"</span>: <span class="js">"unspecified"</span>, <span class="jk">"default"</span>: <span class="kw">true</span> <span class="jb">}</span>,
+    <span class="jb">{</span> <span class="jk">"name"</span>: <span class="js">"gemini-3-pro"</span>, <span class="jk">"default"</span>: <span class="kw">false</span> <span class="jb">}</span>
+  <span class="jb">]</span>
+<span class="jb">}</span></pre>
+          <div class="try-box" style="margin-top:10px">
+            <button class="try-btn" onclick="tryModels()"><i class="fa-solid fa-list"></i> Fetch Models</button>
+            <div class="result-box" id="modelsResult"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- status -->
+    <div class="group-card" data-search="status stats health /api/stats">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <div class="group-icon red"><i class="fa-solid fa-heart-pulse"></i></div>
+        <div class="group-name">status</div>
+        <span class="group-badge">2 EPs</span>
+        <i class="fa-solid fa-chevron-right group-chevron"></i>
+      </div>
+      <div class="group-body">
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge get">GET</span>
+          <span class="ep-path-text">/api/stats</span>
+          <span class="ep-desc-short">API stats</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Returns uptime, total requests, and per-endpoint call counts.</p>
+          <div class="try-box">
+            <button class="try-btn" onclick="tryStats()"><i class="fa-solid fa-heart-pulse"></i> Get Stats</button>
+            <div class="result-box" id="statsResult"></div>
+          </div>
+        </div>
+
+        <div class="ep-row" onclick="toggleDetail(this)">
+          <span class="method-badge get">GET</span>
+          <span class="ep-path-text">/stats</span>
+          <span class="ep-desc-short">Stats page</span>
+        </div>
+        <div class="ep-detail">
+          <p class="ep-desc-text">Visual stats dashboard page. Open in browser.</p>
+          <div class="try-box">
+            <button class="try-btn" onclick="window.open('/stats','_blank')"><i class="fa-solid fa-chart-bar"></i> Open Dashboard</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /groupsList -->
+
+  <!-- Cat character -->
+  <div class="cat-wrap">
+    <span class="cat-char">🐱</span>
+  </div>
+
+  <div class="page-footer">
+    POWERED BY <a href="https://github.com/FX-SIF4T" target="_blank">@SIFAT</a> &bull; 2026
+  </div>
+
+</div><!-- /page -->
+
+<script>
+  const BASE = window.location.origin;
+  document.getElementById('baseUrl').textContent = BASE;
+
+  /* ── Terminal log simulator ── */
+  const logs = [
+    { cls:'green', t:`[INFO] Starting Gaymini pro...` },
+    { cls:'blue',  t:`[INFO] Environment: Production` },
+    { cls:'green', t:`[+] GET  /api/models ✓` },
+    { cls:'green', t:`[+] POST /api/gemini ✓` },
+    { cls:'green', t:`[+] POST /api/image ✓` },
+    { cls:'yellow',t:`[+] POST /api/deep-research ✓` },
+    { cls:'green', t:`[+] GET  /api/chat/stream ✓` },
+    { cls:'purple',t:`[+] POST /api/vision ✓` },
+    { cls:'green', t:`[+] GET  /api/stats ✓` },
+    { cls:'blue',  t:`[INFO] Server ready on port 5000` },
+  ];
+  const tb = document.getElementById('termBody');
+  let li = 0;
+  function addLog() {
+    if (li >= logs.length) { li = 0; tb.innerHTML = ''; }
+    const l = logs[li++];
+    const span = document.createElement('div');
+    span.className = `term-line ${l.cls}`;
+    span.textContent = l.t;
+    tb.appendChild(span);
+    if (tb.children.length > 6) tb.removeChild(tb.firstChild);
+    tb.scrollTop = tb.scrollHeight;
+  }
+  for (let i=0;i<5;i++) addLog();
+  setInterval(addLog, 2000);
+
+  /* ── Clock + date ── */
+  function updateClock() {
+    const n = new Date();
+    document.getElementById('statTime').textContent =
+      n.toLocaleTimeString('en-GB');
+    document.getElementById('statDate').textContent =
+      n.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  /* ── Stats from API ── */
+  async function fetchStats() {
+    try {
+      const r = await fetch('/api/stats');
+      const d = await r.json();
+      document.getElementById('statReqs').textContent = (d.total_requests||0).toLocaleString();
+    } catch {}
+  }
+  fetchStats();
+  setInterval(fetchStats, 10000);
+
+  /* ── Group toggle ── */
+  function toggleGroup(header) {
+    header.parentElement.classList.toggle('open');
+  }
+
+  /* ── Endpoint detail toggle ── */
+  function toggleDetail(row) {
+    const detail = row.nextElementSibling;
+    if (!detail || !detail.classList.contains('ep-detail')) return;
+    const open = detail.classList.contains('show');
+    row.parentElement.querySelectorAll('.ep-detail').forEach(d => d.classList.remove('show'));
+    row.parentElement.querySelectorAll('.ep-row').forEach(r => r.classList.remove('open'));
+    if (!open) {
+      detail.classList.add('show');
+      row.classList.add('open');
+    }
+  }
+
+  /* ── Tab switching ── */
+  function switchDTab(group, tab, btn) {
+    const container = document.getElementById('tabs-' + group);
+    if (!container) return;
+    const block = container.closest('.ep-detail') || container.parentElement;
+    block.querySelectorAll('.dtab-pane').forEach(p => p.classList.remove('active'));
+    block.querySelectorAll('.dtab-btn').forEach(b => b.classList.remove('active'));
+    const pane = document.getElementById(group + '-' + tab);
+    if (pane) pane.classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+
+  /* ── Search ── */
+  function filterGroups() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('.group-card').forEach(card => {
+      const text = (card.dataset.search || '') + ' ' +
+        [...card.querySelectorAll('.ep-path-text')].map(e=>e.textContent).join(' ');
+      card.style.display = text.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+
+  /* ── Replace BASE_URL in pre elements ── */
+  document.querySelectorAll('pre').forEach(p => {
+    p.innerHTML = p.innerHTML.replace(/BASE_URL/g, BASE);
+  });
+
+  /* ── Try it live functions ── */
+  async function apiPost(url, body, resultId, isImage=false) {
+    const box = document.getElementById(resultId);
+    box.style.display = 'flex';
+    box.className = 'result-box loading';
+    box.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+    try {
+      const opts = { method: 'POST' };
+      if (body instanceof FormData) {
+        opts.body = body;
+      } else {
+        opts.headers = { 'Content-Type': 'application/json' };
+        opts.body = JSON.stringify(body);
+      }
+      const r = await fetch(url, opts);
+      const d = await r.json();
+      box.style.display = 'block';
+      if (d.error) {
+        box.className = 'result-box err'; box.textContent = '❌ ' + d.error; return;
+      }
+      if (isImage && d.images && d.images.length > 0 && d.images[0]?.data_url) {
+        box.className = 'result-box img-result';
+        let html = `<div style="color:#4ade80;margin-bottom:6px;font-size:11px">✓ Image generated!</div>`;
+        d.images.forEach((img, i) => {
+          if (img.data_url) html += `<img class="gen-img" src="${img.data_url}" style="margin-bottom:6px"/><a href="${img.data_url}" download="img${i+1}.jpg" style="color:#93c5fd;font-size:10px;display:block;margin-bottom:8px">↓ Download image ${i+1}</a>`;
+        });
+        if (d.text) html += `<div style="color:#94a3b8;font-size:11px;margin-top:6px;white-space:pre-wrap">${d.text}</div>`;
+        box.innerHTML = html;
+      } else if (isImage && d.images && d.images.length > 0 && d.images[0]?.url) {
+        box.className = 'result-box img-result';
+        box.innerHTML = `<div style="color:#fbbf24;margin-bottom:6px;font-size:11px">⚠ Image URL only (no base64)</div><a href="${d.images[0].url}" target="_blank" style="color:#93c5fd;font-size:11px;word-break:break-all">${d.images[0].url}</a>${d.text ? `<div style="color:#94a3b8;font-size:11px;margin-top:8px;white-space:pre-wrap">${d.text}</div>` : ''}`;
+      } else {
+        box.className = 'result-box';
+        const text = d.text || d.result || d.answer || d.translation || d.summary || d.rewritten || d.caption || d.description || JSON.stringify(d, null, 2);
+        box.textContent = text;
+      }
+    } catch(e) {
+      box.className = 'result-box err'; box.textContent = '❌ ' + e.message; box.style.display='block';
+    }
+  }
+
+  async function tryVideo() {
+    const prompt = document.getElementById('videoPrompt').value.trim();
+    const model = document.getElementById('videoModel').value;
+    const image = document.getElementById('videoImage').files[0];
+    const box = document.getElementById('videoResult');
+    const btn = document.getElementById('videoBtn');
+    if (!prompt) {
+      box.style.display = 'block';
+      box.className = 'result-box err';
+      box.textContent = '❌ Enter a video prompt first.';
+      return;
+    }
+
+    box.style.display = 'flex';
+    box.className = 'result-box loading';
+    box.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating video… this may take several minutes.';
+    btn.disabled = true;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8 * 60 * 1000);
+    try {
+      const options = { method: 'POST', signal: controller.signal };
+      if (image) {
+        const form = new FormData();
+        form.append('image', image);
+        form.append('prompt', prompt);
+        form.append('model', model);
+        options.body = form;
+      } else {
+        options.headers = {'Content-Type': 'application/json'};
+        options.body = JSON.stringify({ prompt, model });
+      }
+      const response = await fetch('/api/video', options);
+      const data = await response.json();
+      box.style.display = 'block';
+      if (!response.ok || data.error) {
+        box.className = 'result-box err';
+        const detail = data.text ? `\n\nGemini replied:\n${data.text}` : '';
+        box.textContent = '❌ ' + (data.error || 'Video generation failed.') + detail;
+        return;
+      }
+
+      const videos = data.videos || [];
+      if (!videos.length) {
+        box.className = 'result-box err';
+        box.textContent = '❌ Gemini returned no video.';
+        return;
+      }
+      box.className = 'result-box video-result';
+      box.innerHTML = '<div class="video-success"><i class="fa-solid fa-circle-check"></i> Video generated</div>' +
+        videos.map((video, index) => {
+          const src = video.proxy_url || video.url;
+          const poster = video.thumbnail ? ` poster="${escapeHtml(video.thumbnail)}"` : '';
+          return `<div class="generated-video-card">
+            <video class="generated-video" controls${poster} preload="metadata">
+              <source src="${escapeHtml(src)}" type="video/mp4"/>
+            </video>
+            <div class="video-links">
+              <a href="${escapeHtml(src)}" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open video</a>
+              <a href="${escapeHtml(src)}" download="gemini-video-${index + 1}.mp4"><i class="fa-solid fa-download"></i> Download</a>
+            </div>
+          </div>`;
+        }).join('') +
+        (data.text ? `<div class="video-response-text">${escapeHtml(data.text)}</div>` : '');
+    } catch (error) {
+      box.style.display = 'block';
+      box.className = 'result-box err';
+      box.textContent = error.name === 'AbortError'
+        ? '❌ The request exceeded the 8-minute browser limit. The server may still be finishing.'
+        : '❌ ' + error.message;
+    } finally {
+      clearTimeout(timer);
+      btn.disabled = false;
+    }
+  }
+
+  async function tryMusic() {
+    const prompt = document.getElementById('musicPrompt').value.trim();
+    const model = document.getElementById('musicModel').value;
+    const box = document.getElementById('musicResult');
+    const btn = document.getElementById('musicBtn');
+    if (!prompt) {
+      box.style.display = 'block';
+      box.className = 'result-box err';
+      box.textContent = '❌ Enter a music prompt first.';
+      return;
+    }
+
+    box.style.display = 'flex';
+    box.className = 'result-box loading';
+    box.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating music… this may take several minutes.';
+    btn.disabled = true;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5 * 60 * 1000);
+    try {
+      const response = await fetch('/api/music', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ prompt, model }),
+        signal: controller.signal,
+      });
+      const data = await response.json();
+      box.style.display = 'block';
+      if (!response.ok || data.error) {
+        box.className = 'result-box err';
+        const detail = data.text ? `\n\nGemini replied:\n${data.text}` : '';
+        box.textContent = '❌ ' + (data.error || 'Music generation failed.') + detail;
+        return;
+      }
+      const media = data.media || [];
+      if (!media.length) {
+        box.className = 'result-box err';
+        box.textContent = '❌ Gemini returned no audio track.';
+        return;
+      }
+      box.className = 'result-box music-result';
+      box.innerHTML = '<div class="music-success"><i class="fa-solid fa-circle-check"></i> Music generated</div>' +
+        media.map((track, index) => {
+          const src = track.audio_proxy_url || track.audio_url;
+          return `<div style="margin-top:10px">
+            <div style="color:#e2e8f0;font-size:11px;margin-bottom:4px">${escapeHtml(track.title || `Track ${index + 1}`)}</div>
+            <audio class="generated-audio" controls preload="metadata" src="${escapeHtml(src)}"></audio>
+            <div class="video-links">
+              <a href="${escapeHtml(src)}" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Open audio</a>
+              <a href="${escapeHtml(src)}" download="gemini-music-${index + 1}.mp3"><i class="fa-solid fa-download"></i> Download MP3</a>
+            </div>
+          </div>`;
+        }).join('') +
+        (data.text ? `<div class="video-response-text">${escapeHtml(data.text)}</div>` : '');
+    } catch (error) {
+      box.style.display = 'block';
+      box.className = 'result-box err';
+      box.textContent = error.name === 'AbortError'
+        ? '❌ The request exceeded the 5-minute browser limit.'
+        : '❌ ' + error.message;
+    } finally {
+      clearTimeout(timer);
+      btn.disabled = false;
+    }
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+      '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+    }[char]));
+  }
+
+  function tryGemini() {
+    const msg = document.getElementById('geminiMsg').value.trim();
+    const mode = document.getElementById('geminiMode').value;
+    const file = document.getElementById('geminiFile').files[0];
+    if (!msg && !file) return;
+    if (file) {
+      const fd = new FormData();
+      fd.append('image', file);
+      fd.append('message', msg || 'Describe this image');
+      fd.append('mode', mode);
+      apiPost('/api/gemini', fd, 'geminiResult', true);
+    } else {
+      apiPost('/api/gemini', { message: msg, mode }, 'geminiResult', mode==='image');
+    }
+  }
+
+  async function tryChat() {
+    const msg = document.getElementById('chatMsg').value.trim();
+    const mode = document.getElementById('chatMode').value;
+    const box = document.getElementById('chatResult');
+    if (!msg) return;
+    box.style.display = 'flex';
+    box.className = 'result-box loading';
+    box.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing…';
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: msg, mode}),
+      });
+      const data = await response.json();
+      box.style.display = 'block';
+      if (!response.ok || data.error) {
+        box.className = 'result-box err';
+        box.textContent = '❌ ' + (data.error || 'Request failed.') +
+          (data.text ? `\n\nGemini replied:\n${data.text}` : '');
+        return;
+      }
+      if (data.media && data.media.length) {
+        box.className = 'result-box music-result';
+        box.innerHTML = '<div class="music-success"><i class="fa-solid fa-circle-check"></i> Music response</div>' +
+          data.media.map((track, i) => {
+            const src = track.audio_proxy_url || track.audio_url;
+            return `<div style="margin-top:10px">
+              <div style="color:#e2e8f0;font-size:11px">${escapeHtml(track.title || `Track ${i + 1}`)}</div>
+              <audio class="generated-audio" controls preload="metadata" src="${escapeHtml(src)}"></audio>
+              <a href="${escapeHtml(src)}" download="gemini-music-${i + 1}.mp3" style="color:#93c5fd;font-size:10px">↓ Download audio</a>
+            </div>`;
+          }).join('') +
+          (data.text ? `<div class="video-response-text">${escapeHtml(data.text)}</div>` : '');
+      } else if (data.videos && data.videos.length) {
+        box.className = 'result-box music-result';
+        box.innerHTML = data.videos.map((video, i) => {
+          const src = video.proxy_url || video.url;
+          return `<div style="margin-top:8px">
+            <div style="color:#e2e8f0;font-size:11px">${escapeHtml(video.title || `Video ${i + 1}`)}</div>
+            <video controls preload="metadata" style="width:100%;margin-top:6px" src="${escapeHtml(src)}"></video>
+          </div>`;
+        }).join('');
+      } else if (data.images && data.images.length) {
+        box.className = 'result-box img-result';
+        box.innerHTML = data.images.map(img => {
+          const src = img.data_url || img.url;
+          return `<img class="gen-img" src="${escapeHtml(src)}" alt="Generated image"/>`;
+        }).join('');
+      } else {
+        box.className = 'result-box';
+        box.textContent = data.text || data.result || data.answer || JSON.stringify(data, null, 2);
+      }
+    } catch (error) {
+      box.className = 'result-box err';
+      box.textContent = '❌ ' + error.message;
+    }
+  }
+
+  function tryHistory() {
+    const msg = document.getElementById('histMsg').value.trim();
+    const chatId = document.getElementById('histChatId').value.trim();
+    if (!msg) return;
+    const body = { message: msg };
+    if (chatId) body.chat_id = chatId;
+    const box = document.getElementById('histResult');
+    box.style.display = 'flex';
+    box.className = 'result-box loading';
+    box.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+    fetch('/api/chat/history', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    }).then(r=>r.json()).then(d=>{
+      if (d.chat_id) document.getElementById('histChatId').value = d.chat_id;
+      box.style.display='block';
+      box.className='result-box';
+      box.textContent = d.text||d.error||JSON.stringify(d,null,2);
+    }).catch(e=>{ box.className='result-box err'; box.textContent='❌ '+e.message; box.style.display='block'; });
+  }
+
+  function tryTranslate() {
+    const text = document.getElementById('trText').value.trim();
+    const lang = document.getElementById('trLang').value.trim() || 'Bengali';
+    if (!text) return;
+    apiPost('/api/translate', { text, target_language: lang }, 'trResult');
+  }
+
+  function tryCode() {
+    const task = document.getElementById('codeTask').value.trim();
+    const mode = document.getElementById('codeMode').value;
+    const language = document.getElementById('codeLanguage').value;
+    const target_language = document.getElementById('codeTargetLanguage').value;
+    const context = document.getElementById('codeContext').value.trim();
+    const model = document.getElementById('codeModel').value;
+    if (!task) return;
+    apiPost('/api/code', { task, mode, language, target_language, context, model }, 'codeResult');
+  }
+
+  function tryImage() {
+    const prompt = document.getElementById('imgPrompt').value.trim();
+    if (!prompt) return;
+    const model = document.getElementById('imgModel').value;
+    apiPost('/api/image', { prompt, model }, 'imgResult', true);
+  }
+
+  function tryVision() {
+    const file = document.getElementById('visionFile').files[0];
+    const q = document.getElementById('visionQ').value.trim();
+    if (!file || !q) { alert('Please select an image and enter a question'); return; }
+    const fd = new FormData();
+    fd.append('image', file);
+    fd.append('question', q);
+    apiPost('/api/vision', fd, 'visionResult');
+  }
+
+  async function tryDeepResearch() {
+    const topic = document.getElementById('drTopic').value.trim();
+    if (!topic) return;
+    const box = document.getElementById('drResult');
+    const btn = document.getElementById('drBtn');
+    box.style.display = 'flex';
+    box.className = 'result-box loading';
+    box.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Researching (1–5 min)...';
+    btn.disabled = true;
+    try {
+      const r = await fetch('/api/deep-research', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ topic }),
+      });
+      const d = await r.json();
+      box.style.display='block';
+      box.className='result-box';
+      box.textContent = d.report || d.error || JSON.stringify(d,null,2);
+    } catch(e) {
+      box.className='result-box err'; box.textContent='❌ '+e.message; box.style.display='block';
+    } finally { btn.disabled=false; }
+  }
+
+  function tryModels() {
+    const box = document.getElementById('modelsResult');
+    box.style.display='flex'; box.className='result-box loading';
+    box.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+    fetch('/api/models').then(r=>r.json()).then(d=>{
+      box.style.display='block'; box.className='result-box';
+      box.textContent=JSON.stringify(d,null,2);
+    }).catch(e=>{box.className='result-box err';box.textContent='❌ '+e.message;box.style.display='block';});
+  }
+
+  function tryStats() {
+    const box = document.getElementById('statsResult');
+    box.style.display='flex'; box.className='result-box loading';
+    box.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+    fetch('/api/stats').then(r=>r.json()).then(d=>{
+      box.style.display='block'; box.className='result-box';
+      box.textContent=JSON.stringify(d,null,2);
+    }).catch(e=>{box.className='result-box err';box.textContent='❌ '+e.message;box.style.display='block';});
+  }
+
+  function trySummarize() {
+    const text = document.getElementById('sumText').value.trim();
+    const format = document.getElementById('sumFormat').value;
+    const length = document.getElementById('sumLength').value;
+    if (!text) return;
+    apiPost('/api/summarize', { text, format, length }, 'sumResult');
+  }
+
+  function tryRewrite() {
+    const text = document.getElementById('rwText').value.trim();
+    const tone = document.getElementById('rwTone').value;
+    if (!text) return;
+    apiPost('/api/rewrite', { text, tone }, 'rwResult');
+  }
+
+  function tryStream() {
+    const msg = document.getElementById('streamMsg').value.trim();
+    if (!msg) return;
+    const box = document.getElementById('streamResult');
+    const btn = document.getElementById('streamBtn');
+    box.style.display = 'block';
+    box.className = 'result-box';
+    box.textContent = '';
+    btn.disabled = true;
+    const es = new EventSource('/api/chat/stream?message=' + encodeURIComponent(msg));
+    es.onmessage = function(e) {
+      try {
+        const d = JSON.parse(e.data);
+        if (d.type === 'chunk') box.textContent += d.text;
+        if (d.type === 'done' || d.type === 'error') { es.close(); btn.disabled = false; }
+        if (d.type === 'error') { box.className = 'result-box err'; box.textContent = '❌ ' + (d.error || 'Stream error'); }
+      } catch {}
+    };
+    es.onerror = function() { es.close(); btn.disabled = false; };
+  }
+
+  function tryImageEdit() {
+    const file = document.getElementById('imgeditFile').files[0];
+    const instruction = document.getElementById('imgeditInstruction').value.trim();
+    if (!file || !instruction) { alert('Please select an image and enter an instruction'); return; }
+    const fd = new FormData();
+    fd.append('image', file);
+    fd.append('prompt', instruction);
+    fd.append('model', document.getElementById('imgeditModel').value);
+    apiPost('/api/image/edit', fd, 'imgeditResult', true);
+  }
+
+  function tryImageStyle() {
+    const file = document.getElementById('imgstyleFile').files[0];
+    const style = document.getElementById('imgstyleStyle').value;
+    if (!file) { alert('Please select an image'); return; }
+    const fd = new FormData();
+    fd.append('image', file);
+    fd.append('style', style);
+    fd.append('model', document.getElementById('imgstyleModel').value);
+    apiPost('/api/image/style', fd, 'imgstyleResult', true);
+  }
+</script>
+</body>
+</html>
